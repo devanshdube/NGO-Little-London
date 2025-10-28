@@ -1,0 +1,157 @@
+/*==============================================
+   Counter One
+===============================================*/
+.counter-one {
+    position: relative;
+    display: block;
+    background-color: #f1f6f7;
+    padding: 120px 0 90px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.counter-one__shape-1 {
+    position: absolute;
+    bottom: -275px;
+    left: 0;
+    opacity: 0.05;
+    z-index: -1;
+}
+
+.counter-one__shape-1 img {
+    width: auto;
+}
+
+.counter-one__list {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.counter-one__list li {
+    position: relative;
+    display: block;
+    margin-bottom: 30px;
+    margin-left: 35px;
+}
+
+.counter-one__single {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.counter-one__icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    z-index: 1;
+}
+
+.counter-one__icon span {
+    position: relative;
+    display: inline-block;
+    font-size: 60px;
+    color: var(--givewell-primary);
+    transition-delay: 0.1s;
+    transition: all 500ms ease;
+}
+
+.counter-one__single:hover .counter-one__icon span {
+    transform: rotateY(180deg);
+    transition-delay: 0.1s;
+}
+
+.counter-one__icon-shape-1 {
+    position: absolute;
+    top: -25px;
+    left: -30px;
+    opacity: .15;
+    z-index: -1;
+}
+
+.counter-one__icon-shape-1 img {
+    width: auto;
+}
+
+.counter-one__list li:nth-child(2) .counter-one__icon span {
+    color: var(--givewell-base);
+}
+
+.counter-one__list li:nth-child(3) .counter-one__icon span {
+    color: #8139e7;
+}
+
+.counter-one__list li:nth-child(4) .counter-one__icon span {
+    color: #44c895;
+}
+
+.counter-one__content {
+    position: relative;
+    display: block;
+    flex: 1;
+    text-align: right;
+    z-index: 2;
+}
+
+.counter-one__content-count {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 17px;
+}
+
+.counter-one__content-count h3 {
+    font-size: 50px;
+    color: #122627;
+    font-weight: 900;
+    line-height: 50px;
+}
+
+.counter-one__content-count span {
+    font-size: 50px;
+    color: #122627;
+    font-weight: 900;
+    line-height: 50px;
+}
+
+.counter-one__text {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: var(--givewell-white);
+    padding: 8px 20px 8px;
+    border-radius: 21px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------
+# End
+--------------------------------------------------------------*/

@@ -1,0 +1,189 @@
+/*==============================================
+   Helping Hand
+===============================================*/
+.helping-hand {
+    position: relative;
+    display: block;
+    padding: 120px 0 0;
+    z-index: 1;
+}
+
+.helping-hand__top {
+    position: relative;
+    display: block;
+}
+
+.helping-hand__top-wrap {
+    position: relative;
+    display: block;
+    max-width: 1624px;
+    width: 100%;
+    margin: 0 auto 0;
+    padding: 0 12px;
+    background-color: var(--givewell-extra);
+    border-radius: 45px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.helping-hand__top-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.06;
+    z-index: -1;
+}
+
+.helping-hand__top-inner {
+    position: relative;
+    display: block;
+    padding: 120px 0 287px;
+}
+
+.helping-hand__top-inner .section-title {
+    margin-bottom: 0;
+}
+
+.helping-hand__bottom {
+    position: relative;
+    display: block;
+    margin-top: -370px;
+}
+
+.helping-hand__bottom-inner {
+    position: relative;
+    display: block;
+    padding-top: 370px;
+    padding-left: 194px;
+    padding-right: 143px;
+    z-index: 1;
+}
+
+.helping-hand__bottom-inner .row {
+    --bs-gutter-x: 74px;
+}
+
+.helping-hand__bottom-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: -1;
+    clip-path: polygon(53% 0, 100% 0, 100% 35%, 100% 70%, 100% 100%, 50% 100%, 0 100%, 0% 70%, 0 20%, 41% 20%);
+}
+
+.helping-hand__single {
+    position: relative;
+    display: block;
+}
+
+.helping-hand__icon {
+    position: absolute;
+    top: 0;
+    left: -50px;
+    height: 145px;
+    width: 100px;
+    border: 1px solid rgba(var(--givewell-black-rgb), .20);
+    background-color: var(--givewell-extra);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 45px;
+    z-index: 2;
+}
+
+.helping-hand__icon span {
+    position: relative;
+    display: inline-block;
+    font-size: 65px;
+    color: var(--givewell-base);
+    -webkit-transition: all 0.90s ease;
+    -o-transition: all 0.90s ease;
+    transition: all 0.90s ease;
+}
+
+.helping-hand__single:hover .helping-hand__icon span {
+    transform: scale(1.02) translateX(2px);
+}
+
+.helping-hand__icon--two span {
+    color: var(--givewell-primary);
+}
+
+.helping-hand__single-inner {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background-color: var(--givewell-white);
+    padding: 32px 85px 26px;
+    padding-right: 54px;
+    border-top-right-radius: 15px;
+    z-index: 1;
+}
+
+.helping-hand__shape-2 {
+    position: absolute;
+    bottom: -26px;
+    right: -45px;
+    z-index: -1;
+}
+
+.helping-hand__shape-2 img {
+    width: auto;
+}
+
+.helping-hand__title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px;
+}
+
+.helping-hand__title a {
+    color: var(--givewell-black);
+}
+
+.helping-hand__title a:hover {
+    color: var(--givewell-base);
+}
+
+.helping-hand__shape-1 {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 11px;
+}
+
+.helping-hand__shape-1 img {
+    width: auto;
+}
+
+.helping-hand__text {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------
+# End
+--------------------------------------------------------------*/

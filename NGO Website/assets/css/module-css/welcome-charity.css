@@ -1,0 +1,341 @@
+/*==============================================
+   Welcome Charity
+===============================================*/
+.welcome-charity {
+    position: relative;
+    display: block;
+    background-color: #122627;
+    padding: 120px 0 0px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.welcome-charity__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    opacity: 0.08;
+    z-index: -1;
+}
+
+.welcome-charity__shape-1 {
+    position: absolute;
+    top: -514px;
+    right: 0;
+    z-index: -1;
+}
+
+.welcome-charity__shape-1 img {
+    width: auto;
+}
+
+.welcome-charity__shape-2 {
+    position: absolute;
+    bottom: -340px;
+    left: 0;
+    opacity: .06;
+    z-index: -1;
+}
+
+.welcome-charity__shape-2 img {
+    width: auto;
+}
+
+.welcome-charity__left {
+    position: relative;
+    display: block;
+    margin-right: -30px;
+}
+
+.welcome-charity__left .section-title {
+    margin-bottom: 0;
+}
+
+.welcome-charity__left .section-title-two .section-title__tagline {
+    color: var(--givewell-white);
+}
+
+.welcome-charity__left .section-title__title {
+    color: var(--givewell-white);
+}
+
+.welcome-charity__right {
+    position: relative;
+    display: block;
+    margin-left: 104px;
+}
+
+.welcome-charity__carousel {
+    position: relative;
+    display: block;
+}
+
+.welcome-charity__single {
+    position: relative;
+    display: block;
+}
+
+.welcome-charity__img-box {
+    position: relative;
+    display: block;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    margin: 0 auto 0;
+    z-index: 3;
+}
+
+.welcome-charity__img-box:before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+    background-color: var(--givewell-white);
+    border-radius: 50%;
+    box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+    z-index: -1;
+}
+
+.welcome-charity__img {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.welcome-charity__img img {
+    width: 100%;
+    border-radius: 50%;
+    transform: scale(1.0);
+    transition: all 1500ms ease;
+}
+
+.welcome-charity__single:hover .welcome-charity__img img {
+    transform: scale(1.05) rotate(0deg);
+}
+
+.welcome-charity__content {
+    position: relative;
+    display: block;
+    text-align: center;
+    padding: 115px 0 0;
+    margin-top: -80px;
+    z-index: 1;
+}
+
+.welcome-charity__content-shape-1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+    z-index: -1;
+}
+
+.welcome-charity__single:hover .welcome-charity__content-shape-1 {
+    opacity: .10;
+}
+
+.welcome-charity__title-box {
+    position: relative;
+    display: block;
+    margin-bottom: 36px;
+}
+
+.welcome-charity__title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.welcome-charity__title a {
+    color: var(--givewell-black);
+}
+
+.welcome-charity__single:hover .welcome-charity__title a {
+    color: var(--givewell-white);
+}
+
+.welcome-charity__title-shape-1 {
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    opacity: 1;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.welcome-charity__title-shape-1 img {
+    width: auto !important;
+    margin: 0 auto 0;
+}
+
+.welcome-charity__single:hover .welcome-charity__title-shape-1 {
+    opacity: 0;
+}
+
+.welcome-charity__title-shape-2 {
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.welcome-charity__title-shape-2 img {
+    width: auto !important;
+    margin: 0 auto 0;
+}
+
+.welcome-charity__single:hover .welcome-charity__title-shape-2 {
+    opacity: 1;
+}
+
+.welcome-charity__icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 75px;
+    width: 85px;
+    background-color: rgba(243, 222, 216, 1);
+    border: 1px solid #e7e7e7;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    margin: 0 auto 0;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.welcome-charity__icon span {
+    position: relative;
+    display: inline-block;
+    font-size: 40px;
+    color: var(--givewell-primary);
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.welcome-charity__icon--two {
+    background-color: rgba(224, 218, 245, 1);
+}
+
+.welcome-charity__icon--two span {
+    color: #8139e7;
+}
+
+
+.welcome-charity__icon--three {
+    background-color: rgba(243, 234, 213, 1);
+}
+
+.welcome-charity__icon--three span {
+    color: #fca215;
+}
+
+.welcome-charity__single:hover .welcome-charity__icon {
+    background-color: rgba(255, 255, 255, .10);
+    border: 1px solid rgba(255, 255, 255, .10);
+}
+
+.welcome-charity__single:hover .welcome-charity__icon span {
+    color: var(--givewell-white);
+}
+
+.welcome-charity__carousel.owl-theme .owl-nav {
+    position: absolute;
+    bottom: 68px;
+    left: -552px;
+    margin: 0 !important;
+}
+
+.welcome-charity__carousel.owl-theme .owl-nav .owl-next {
+    height: 55px;
+    width: 55px;
+    line-height: 55px;
+    border-radius: 5px;
+    color: var(--givewell-black);
+    background-color: var(--givewell-white);
+    border: none;
+    font-size: 20px;
+    margin: 0;
+    text-align: center;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+    position: relative;
+    display: inline-block;
+}
+
+.welcome-charity__carousel.owl-theme .owl-nav .owl-prev {
+    height: 55px;
+    width: 55px;
+    line-height: 55px;
+    border-radius: 5px;
+    color: var(--givewell-black);
+    background-color: var(--givewell-white);
+    border: none;
+    font-size: 20px;
+    margin: 0;
+    text-align: center;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+    position: relative;
+    display: inline-block;
+}
+
+.welcome-charity__carousel.owl-theme .owl-nav .owl-next {
+    margin-left: 5px;
+}
+
+.welcome-charity__carousel.owl-theme .owl-nav .owl-prev {
+    margin-right: 5px;
+}
+
+.welcome-charity__carousel.owl-theme .owl-nav .owl-next span,
+.welcome-charity__carousel.owl-theme .owl-nav .owl-prev span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome-charity__carousel.owl-theme .owl-nav .owl-next:hover,
+.welcome-charity__carousel.owl-theme .owl-nav .owl-prev:hover {
+    background-color: var(--givewell-primary);
+    color: var(--givewell-white);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------
+# End
+--------------------------------------------------------------*/

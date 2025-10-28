@@ -1,0 +1,1276 @@
+/*--------------------------------------------------------------
+# Donate One
+--------------------------------------------------------------*/
+.donate-one {
+    position: relative;
+    display: block;
+    padding: 120px 0 0;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.donate-one__bg-color {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 705px;
+    background-color: var(--givewell-extra);
+    z-index: -1;
+}
+
+.donate-one__shape-1 {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    opacity: .80;
+    z-index: -1;
+}
+
+.donate-one__shape-1 img {
+    width: auto;
+}
+
+.donate-one__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: .40;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.donate-one .section-title {
+    margin-bottom: 57px;
+}
+
+.donate-one__left {
+    position: relative;
+    display: block;
+}
+
+.donate-one__form-box {
+    position: relative;
+    display: block;
+    border-radius: 20px;
+    background-color: var(--givewell-white);
+    box-shadow: 0px 10px 60px 0px rgba(0, 0, 0, 0.07);
+    padding: 40px 45px 46px;
+}
+
+.donate-one__form {
+    position: relative;
+    display: block;
+}
+
+.donate-one__input-box-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 26px;
+    margin-bottom: 7px;
+}
+
+.donate-one__input-box {
+    position: relative;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.donate-one__input-box input[type="text"],
+.donate-one__input-box input[type="email"] {
+    height: 60px;
+    width: 100%;
+    line-height: 60px;
+    background-color: var(--givewell-extra);
+    border: 1px solid var(--givewell-bdr-color);
+    padding-left: 25px;
+    padding-right: 25px;
+    outline: none;
+    font-size: 16px;
+    color: var(--givewell-gray);
+    display: block;
+    font-weight: 500;
+    border-radius: 30px;
+}
+
+.donate-one__input-box .select-box {
+    width: 100%;
+}
+
+.donate-one__input-box .nice-select {
+    height: 60px;
+    width: 100%;
+    background-color: var(--givewell-extra);
+    border: 1px solid var(--givewell-bdr-color);
+    padding-left: 25px;
+    padding-right: 25px;
+    outline: none;
+    font-size: 16px;
+    color: var(--givewell-gray);
+    display: block;
+    font-weight: 500;
+    border-radius: 30px;
+    line-height: 60px;
+    float: none;
+}
+
+.donate-one__input-box .nice-select:after {
+    position: absolute;
+    top: 21px;
+    right: 25px;
+    width: 8px;
+    height: 8px;
+    border-bottom: 2px solid var(--givewell-gray);
+    border-right: 2px solid var(--givewell-gray);
+    margin-top: 0px;
+    z-index: 10;
+}
+
+.donate-one__input-box .nice-select .option {
+    color: var(--givewell-white);
+}
+
+.donate-one__donate-box {
+    position: relative;
+    display: block;
+}
+
+.donate-one__donate-box .donate-amount {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.donate-one__donate-box .amount-btn-1 {
+    color: var(--givewell-black);
+    background-color: var(--givewell-extra);
+    border: none;
+    transition: all 0.4s ease-in-out;
+    font-size: 30px;
+    line-height: 30px;
+    border-radius: 30px;
+    font-weight: 700;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    width: 100%;
+    z-index: 1;
+    padding: 0;
+    margin-bottom: 25px;
+    margin-top: 5px;
+}
+
+.donate-one__donate-box .amount-btn-1::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 30px;
+    border: 1px solid var(--givewell-bdr-color);
+    z-index: -1;
+}
+
+.donate-one__donate-box .amount-btn-1 span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 60px;
+    font-weight: 500;
+    font-size: 30px;
+    color: var(--givewell-white);
+    background-color: var(--givewell-primary);
+    border-radius: 30px;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.donate-one__donate-box .amount-btn-1 span:hover {
+    color: var(--givewell-white);
+    background-color: var(--givewell-base);
+}
+
+.donate-one__donate-box .donate-amount .amount-btn {
+    transition: all 0.4s ease-in-out;
+    padding: 10px 20px 10px;
+    background-color: var(--givewell-extra);
+    color: var(--givewell-black);
+    outline: none;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border: 1px solid var(--givewell-bdr-color);
+}
+
+.donate-one__donate-box .donate-amount .amount-btn.active {
+    background-color: var(--givewell-base);
+    color: var(--givewell-white);
+    border: 1px solid var(--givewell-base);
+}
+
+.donate-one__donate-box .donate-amount input {
+    padding: 11px 20px 11px;
+    background-color: var(--givewell-extra);
+    color: var(--givewell-black);
+    max-width: 110px;
+    width: 100%;
+    outline: none;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: capitalize;
+    border: 1px solid var(--givewell-bdr-color);
+}
+
+.donate-one__right {
+    position: relative;
+    display: block;
+}
+
+.donate-one__img-box {
+    position: relative;
+    display: block;
+}
+
+.donate-one__img {
+    position: relative;
+    display: block;
+}
+
+.donate-one__img img {
+    width: 100%;
+    border-radius: 20px;
+}
+
+.donate-one__progress-and-raised {
+    position: absolute;
+    bottom: 20px;
+    left: 50px;
+    right: 50px;
+    display: flex;
+    align-items: center;
+    background-color: var(--givewell-white);
+    border-radius: 15px;
+    gap: 30px;
+    padding: 41px 30px 46px;
+}
+
+.donate-one__progress {
+    position: relative;
+    display: block;
+    max-width: 280px;
+    width: 100%;
+}
+
+.donate-one__progress .bar {
+    position: relative;
+    width: 100%;
+    height: 26px;
+    background-color: var(--givewell-extra);
+    border: 1px solid var(--givewell-bdr-color);
+    border-radius: 13px;
+}
+
+.donate-one__progress .bar-inner {
+    position: relative;
+    display: block;
+    width: 0px;
+    left: 5px;
+    top: 4px;
+    height: 16px;
+    border-radius: 8px;
+    background-color: var(--givewell-base);
+    -webkit-transition: all 1500ms ease;
+    -ms-transition: all 1500ms ease;
+    -o-transition: all 1500ms ease;
+    -moz-transition: all 1500ms ease;
+    transition: all 1500ms ease;
+}
+
+.donate-one__progress .count-text {
+    position: absolute;
+    right: 35px;
+    top: -42px;
+    color: var(--givewell-black);
+    line-height: 26px;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+    opacity: 0;
+    -webkit-transition: all 500ms ease;
+    -ms-transition: all 500ms ease;
+    -o-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.donate-one__progress .bar-inner.counted .count-text {
+    opacity: 1;
+}
+
+.donate-one__progress .bar.marb-0 {
+    margin-bottom: 0;
+}
+
+.donate-one__raised {
+    position: relative;
+    display: block;
+    padding-left: 30px;
+}
+
+.donate-one__raised::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    bottom: -6px;
+    width: 1px;
+    background-color: var(--givewell-bdr-color);
+}
+
+.donate-one__raised h3 {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 50px;
+}
+
+.donate-one__raised p {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 23px;
+    color: var(--givewell-base);
+}
+
+
+/*--------------------------------------------------------------
+# Donation Now
+--------------------------------------------------------------*/
+.donation-now {
+    position: relative;
+    display: block;
+    padding: 120px 0 120px;
+    z-index: 1;
+}
+
+.donation-now__left {
+    position: relative;
+    display: block;
+}
+
+.donation-now__donate-box {
+    position: relative;
+    display: block;
+}
+
+.donation-now__donate-box .donate-amount {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.donation-now__donate-box .amount-btn-1 {
+    color: var(--givewell-white);
+    background-color: var(--givewell-primary);
+    border: none;
+    transition: all 0.4s ease-in-out;
+    font-size: 72px;
+    line-height: 72px;
+    border-radius: 10px;
+    font-weight: 700;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 50px;
+    padding: 25px 25px 25px;
+    padding-right: 85px;
+    z-index: 1;
+}
+
+.donation-now__donate-box .amount-btn-1 span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 100px;
+    font-weight: 700;
+    font-size: 72px;
+    color: var(--givewell-white);
+    background-color: rgba(var(--givewell-white-rgb), .15);
+    border-radius: 50px;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.donation-now__donate-box .amount-btn-1 span:hover {
+    color: var(--givewell-white);
+    background-color: var(--givewell-base);
+}
+
+.donation-now__donate-box .donate-amount .amount-btn {
+    transition: all 0.4s ease-in-out;
+    padding: 36px 40px 36px;
+    background-color: var(--givewell-extra);
+    color: var(--givewell-black);
+    outline: none;
+    border-radius: 20px;
+    font-size: 30px;
+    font-weight: 700;
+    border: 1px solid var(--givewell-bdr-color);
+}
+
+.donation-now__donate-box .donate-amount .amount-btn.active {
+    background-color: var(--givewell-base);
+    color: var(--givewell-white);
+    border: 1px solid var(--givewell-base);
+}
+
+.donation-now__donate-box .donate-amount input {
+    padding: 30px 40px 29px;
+    background-color: var(--givewell-extra);
+    color: var(--givewell-black);
+    max-width: 205px;
+    width: 100%;
+    outline: none;
+    border-radius: 20px;
+    font-size: 30px;
+    font-weight: 700;
+    text-transform: capitalize;
+    border: 1px solid var(--givewell-bdr-color);
+    text-align: center;
+}
+
+.donation-now__payment-title {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 50px;
+    letter-spacing: -0.025em;
+    margin-top: 48px;
+    margin-bottom: 33px;
+}
+
+.donation-now__payment-list {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 55px;
+}
+
+.donation-now__payment-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 55px;
+}
+
+.donation-now__payment-box .custom-radio {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.donation-now__payment-box input[type="radio"] {
+    display: none;
+}
+
+.donation-now__payment-box .custom-radio .radio-dot {
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--givewell-extra);
+    display: block;
+    position: relative;
+    transition: all 200ms linear;
+    transition-delay: 0.1s;
+}
+
+.donation-now__payment-box .custom-radio input[type="radio"]:checked~.radio-dot {
+    border-color: var(--givewell-base);
+}
+
+.donation-now__payment-box .custom-radio .radio-dot::after {
+    content: "";
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background-color: var(--givewell-extra);
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    transition: 0.3s ease-in-out 0s;
+}
+
+.donation-now__payment-box .custom-radio input[type="radio"]:checked~.radio-dot::after {
+    transform: translate(-50%, -50%) scale(1);
+    background-color: var(--givewell-base);
+}
+
+.donation-now__payment-box .custom-radio .radio-text {
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: 600;
+    color: var(--givewell-gray);
+    position: relative;
+    top: 2px;
+}
+
+.donation-now__payment-box .custom-radio input[type="radio"]:checked~.radio-text {
+    color: var(--givewell-black);
+}
+
+.donation-now__prrsonal-info-box {
+    position: relative;
+    display: block;
+    margin-top: 66px;
+}
+
+.donation-now__prrsonal-info-title {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 50px;
+    letter-spacing: -0.025em;
+    margin-bottom: 27px;
+}
+
+.donation-now__form {
+    position: relative;
+    display: block;
+}
+
+.donation-now__form .row {
+    --bs-gutter-x: 20px;
+}
+
+.donation-now__input-box {
+    position: relative;
+    display: block;
+    margin-bottom: 23px;
+}
+
+.donation-now__input-title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 26px;
+    color: var(--givewell-black);
+    margin-bottom: 13px;
+    margin-left: 25px;
+}
+
+.donation-now__input-box input[type="text"],
+.donation-now__input-box input[type="email"] {
+    height: 80px;
+    width: 100%;
+    padding-left: 25px;
+    padding-right: 25px;
+    outline: none;
+    font-size: 16px;
+    color: var(--givewell-gray);
+    display: block;
+    font-weight: 500;
+    border-radius: 10px;
+    background-color: var(--givewell-extra);
+    border: 1px solid var(--givewell-bdr-color);
+}
+
+.donation-now__total-donate {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: -0.025em;
+    margin-top: 21px;
+    margin-bottom: 47px;
+}
+
+.donation-now__total-donate span {
+    color: var(--givewell-gray);
+}
+
+.donation-now__btn-box {
+    position: relative;
+    display: block;
+}
+
+.donation-now__right {
+    position: relative;
+    display: block;
+}
+
+.donation-now__single {
+    position: relative;
+    display: block;
+}
+
+.donation-now__img-box {
+    position: relative;
+    display: block;
+    z-index: 1;
+}
+
+.donation-now__img {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.donation-now__img::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(var(--givewell-black-rgb), .50);
+    opacity: 0;
+    transform: translateY(90px);
+    transition: background-color 0.7s ease;
+    transition: all 0.7s ease;
+    border-radius: 20px;
+    z-index: 1;
+}
+
+.donation-now__single:hover .donation-now__img::before {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.donation-now__img img {
+    width: 100%;
+    border-radius: 20px;
+    transform: scale(1.0);
+    transition-delay: 0.1s;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.7s;
+    transition-property: all;
+}
+
+.donation-now__single:hover .donation-now__img img {
+    transform: scale(1.10) rotate(0deg);
+}
+
+.donation-now__content {
+    position: relative;
+    display: block;
+    margin-top: -140px;
+    border-radius: 15px;
+    background-color: var(--givewell-extra);
+}
+
+.donation-now__content-inner {
+    position: relative;
+    display: block;
+    border: 1px solid var(--givewell-bdr-color);
+    border-radius: 15px;
+    padding: 168px 44px 41px;
+}
+
+.donation-now__sub-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--givewell-base);
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px solid var(--givewell-base);
+}
+
+.donation-now__title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+}
+
+.donation-now__title a {
+    color: var(--givewell-black);
+}
+
+.donation-now__title a:hover {
+    color: var(--givewell-base);
+}
+
+.donation-now__text {
+    font-size: 18px;
+    line-height: 30px;
+}
+
+.donation-now__raised-and-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    display: flex;
+    align-items: center;
+    gap: 19px;
+    background-color: var(--givewell-base);
+    padding: 20px 25px 19px;
+    border-radius: 50px;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.donation-now__raised-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.donation-now__raised-box .doller {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: var(--givewell-white);
+    border-radius: 50%;
+}
+
+.donation-now__raised-box .doller span {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 24px;
+    color: var(--givewell-base);
+}
+
+.donation-now__raised-box .content {
+    position: relative;
+    display: block;
+    flex: 1;
+}
+
+.donation-now__raised-box .content h3 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 34px;
+    color: var(--givewell-white);
+    text-transform: capitalize;
+}
+
+.donation-now__raised-box .content p {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 26px;
+    color: var(--givewell-white);
+    margin-top: 1px;
+}
+
+.donation-now__raised-box .content p span {
+    color: #d6e4e4;
+}
+
+.donation-now__progress {
+    position: relative;
+    display: block;
+    max-width: 75px;
+    width: 100%;
+    transform: rotate(-90deg);
+}
+
+.donation-now__progress .bar {
+    position: relative;
+    width: 100%;
+    height: 18px;
+    background-color: rgba(var(--givewell-white-rgb), .15);
+    border-radius: 9px;
+}
+
+.donation-now__progress .bar-inner {
+    position: relative;
+    display: block;
+    width: 0px;
+    left: 4px;
+    top: 4px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: var(--givewell-white);
+    -webkit-transition: all 1500ms ease;
+    -ms-transition: all 1500ms ease;
+    -o-transition: all 1500ms ease;
+    -moz-transition: all 1500ms ease;
+    transition: all 1500ms ease;
+}
+
+.donation-now__progress .count-text {
+    position: absolute;
+    right: -7px;
+    bottom: -45px;
+    color: var(--givewell-white);
+    line-height: 26px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+    opacity: 0;
+    -webkit-transition: all 500ms ease;
+    -ms-transition: all 500ms ease;
+    -o-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+    transition: all 500ms ease;
+    transform: rotate(90deg);
+}
+
+.donation-now__progress .bar-inner.counted .count-text {
+    opacity: 1;
+}
+
+.donation-now__progress .bar.marb-0 {
+    margin-bottom: 0;
+}
+
+.donation-now__client-box {
+    position: relative;
+    display: block;
+    background-color: var(--givewell-extra);
+    border: 1px solid var(--givewell-bdr-color);
+    border-radius: 20px;
+    margin-top: 60px;
+    padding: 40px 40px 40px;
+}
+
+.donation-now__client-box-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    border-bottom: 1px solid var(--givewell-bdr-color);
+    padding-bottom: 30px;
+    margin-bottom: 36px;
+}
+
+.donation-now__client-img {
+    position: relative;
+    display: block;
+    max-width: 78px;
+    width: 100%;
+}
+
+.donation-now__client-img img {
+    border-radius: 50%;
+    width: 100%;
+}
+
+.donation-now__client-content {
+    position: relative;
+    display: block;
+    flex: 1;
+}
+
+.donation-now__client-content h3 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px;
+    margin-bottom: 1px;
+}
+
+.donation-now__client-content p {
+    font-weight: 500;
+}
+
+.donation-now__client-box-list {
+    position: relative;
+    display: block;
+}
+
+.donation-now__client-box-list li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.donation-now__client-box-list li+li {
+    margin-top: 20px;
+}
+
+.donation-now__client-box-list li .icon {
+    position: relative;
+    display: inline-block;
+    top: 3px;
+}
+
+.donation-now__client-box-list li .icon span {
+    position: relative;
+    display: inline-block;
+    font-size: 30px;
+    color: var(--givewell-base);
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.donation-now__client-box-list li:hover .icon span {
+    color: var(--givewell-black);
+}
+
+.donation-now__client-box-list li p {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/*--------------------------------------------------------------
+# Donation Page
+--------------------------------------------------------------*/
+.donation-page {
+    position: relative;
+    display: block;
+    padding: 120px 0 120px;
+    z-index: 1;
+}
+
+.donation-page__shape-1 {
+    position: absolute;
+    top: 120px;
+    right: 0;
+    z-index: -1;
+}
+
+.donation-page__shape-1 img {
+    width: auto;
+}
+
+.donation-page__single {
+    position: relative;
+    display: block;
+    margin-bottom: 24px;
+}
+
+.donation-page__img-box {
+    position: relative;
+    display: block;
+    z-index: 1;
+}
+
+.donation-page__img {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.donation-page__img::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(var(--givewell-black-rgb), .50);
+    opacity: 0;
+    transform: translateY(90px);
+    transition: background-color 0.7s ease;
+    transition: all 0.7s ease;
+    border-radius: 20px;
+    z-index: 1;
+}
+
+.donation-page__single:hover .donation-page__img::before {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.donation-page__img img {
+    width: 100%;
+    border-radius: 20px;
+    transform: scale(1.0);
+    transition-delay: 0.1s;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.7s;
+    transition-property: all;
+}
+
+.donation-page__single:hover .donation-page__img img {
+    transform: scale(1.10) rotate(0deg);
+}
+
+.donation-page__content {
+    position: relative;
+    display: block;
+    margin-top: -140px;
+    border-radius: 15px;
+    background-color: var(--givewell-white);
+}
+
+.donation-page__content-inner {
+    position: relative;
+    display: block;
+    border: 1px solid var(--givewell-bdr-color);
+    border-radius: 15px;
+    padding: 168px 30px 41px;
+}
+
+.donation-page__sub-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--givewell-base);
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px solid var(--givewell-base);
+}
+
+.donation-page__title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+}
+
+.donation-page__title a {
+    color: var(--givewell-black);
+}
+
+.donation-page__title a:hover {
+    color: var(--givewell-base);
+}
+
+.donation-page__text {
+    font-size: 18px;
+    line-height: 30px;
+}
+
+.donation-page__raised-and-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    display: flex;
+    align-items: center;
+    gap: 19px;
+    background-color: var(--givewell-primary);
+    padding: 20px 25px 19px;
+    border-radius: 50px;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.donation-page__raised-and-progress::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--givewell-base);
+    border-radius: 50px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: background-color 0.7s ease;
+    transition: all 0.7s ease;
+}
+
+.donation-page__single:hover .donation-page__raised-and-progress::before {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.donation-page__raised-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.donation-page__raised-box .doller {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: var(--givewell-white);
+    border-radius: 50%;
+}
+
+.donation-page__raised-box .doller span {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 24px;
+    color: var(--givewell-base);
+}
+
+.donation-page__raised-box .content {
+    position: relative;
+    display: block;
+    flex: 1;
+}
+
+.donation-page__raised-box .content h3 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 34px;
+    color: var(--givewell-white);
+    text-transform: capitalize;
+}
+
+.donation-page__raised-box .content p {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 26px;
+    color: var(--givewell-white);
+    margin-top: 1px;
+}
+
+.donation-page__raised-box .content p span {
+    color: #d6e4e4;
+}
+
+.donation-page__progress {
+    position: relative;
+    display: block;
+    max-width: 75px;
+    width: 100%;
+    transform: rotate(-90deg);
+}
+
+.donation-page__progress .bar {
+    position: relative;
+    width: 100%;
+    height: 18px;
+    background-color: rgba(var(--givewell-white-rgb), .15);
+    border-radius: 9px;
+}
+
+.donation-page__progress .bar-inner {
+    position: relative;
+    display: block;
+    width: 0px;
+    left: 4px;
+    top: 4px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: var(--givewell-white);
+    -webkit-transition: all 1500ms ease;
+    -ms-transition: all 1500ms ease;
+    -o-transition: all 1500ms ease;
+    -moz-transition: all 1500ms ease;
+    transition: all 1500ms ease;
+}
+
+.donation-page__progress .count-text {
+    position: absolute;
+    right: -7px;
+    bottom: -45px;
+    color: var(--givewell-white);
+    line-height: 26px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+    opacity: 0;
+    -webkit-transition: all 500ms ease;
+    -ms-transition: all 500ms ease;
+    -o-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+    transition: all 500ms ease;
+    transform: rotate(90deg);
+}
+
+.donation-page__progress .bar-inner.counted .count-text {
+    opacity: 1;
+}
+
+.donation-page__progress .bar.marb-0 {
+    margin-bottom: 0;
+}
+
+.donation-page__days-and-count {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    background-color: var(--givewell-extra);
+    border-radius: 15px;
+    padding: 8px 30px 11px !important;
+}
+
+.donation-page__days-and-count li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.donation-page__days-and-count li::before {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: -25px;
+    bottom: -10px;
+    width: 1px;
+    background-color: var(--givewell-bdr-color);
+}
+
+.donation-page__days-and-count li:first-child::before {
+    display: none;
+}
+
+.donation-page__days-and-count li .icon {
+    position: relative;
+    display: inline-block;
+}
+
+.donation-page__days-and-count li .icon span {
+    position: relative;
+    display: inline-block;
+    font-size: 41px;
+    color: var(--givewell-base);
+}
+
+.donation-page__days-and-count li .content {
+    position: relative;
+    display: block;
+    flex: 1;
+}
+
+.donation-page__days-and-count li .content h3 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px;
+}
+
+.donation-page__days-and-count li .content p {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 26px;
+    margin-top: 1px;
+}
+
+.donation-page .blog-list__pagination {
+    margin-top: 56px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------
+# End
+--------------------------------------------------------------*/

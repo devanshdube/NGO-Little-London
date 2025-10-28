@@ -1,0 +1,14 @@
+// create dataabase query
+CREATE DATABASE employetest;
+
+// use database query
+use employetest;
+
+// Database Query for create table
+CREATE TABLE emply (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  department VARCHAR(100) NOT NULL,
+  salary DECIMAL(10, 2) NOT NULL
+);
+

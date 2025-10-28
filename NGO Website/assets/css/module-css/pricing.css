@@ -1,0 +1,309 @@
+/*--------------------------------------------------------------
+# Pricing One
+--------------------------------------------------------------*/
+.pricing-one {
+    position: relative;
+    display: block;
+    padding: 120px 0 90px;
+    z-index: 1;
+}
+
+.pricing-one__bg-shape {
+    position: absolute;
+    bottom: -150px;
+    left: 0;
+    right: 0;
+    height: 595px;
+    opacity: .15;
+    filter: grayscale(1);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom center;
+    z-index: -1;
+}
+
+.pricing-one .section-title {
+    margin-bottom: 57px;
+}
+
+.pricing-one__main-tab-box {
+    position: relative;
+    display: block;
+}
+
+.pricing-one__main-tab-box .tab-buttons {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: -166px;
+    right: 0;
+}
+
+.pricing-one__main-tab-box .tab-buttons .tab-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-one__main-tab-box .tab-buttons .tab-btn+.tab-btn {
+    margin-left: 0px;
+}
+
+.pricing-one__main-tab-box .tab-buttons .tab-btn span {
+    position: relative;
+    display: block;
+    text-align: center;
+    font-size: 18px;
+    line-height: 18px;
+    color: var(--givewell-gray);
+    background-color: #f1f6f7;
+    padding: 17px 20px 17px;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid rgba(var(--givewell-black-rgb), .10);
+    transition: all 0.5s linear;
+    z-index: 1;
+}
+
+.pricing-one__main-tab-box .tab-buttons .tab-btn.active-btn span {
+    color: var(--givewell-white);
+    border: 1px solid var(--givewell-primary);
+}
+
+.pricing-one__main-tab-box .tab-buttons .tab-btn span:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 0%;
+    background-color: var(--givewell-primary);
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+.pricing-one__main-tab-box .tab-buttons .tab-btn.active-btn span:before {
+    height: 100%;
+}
+
+.pricing-one__main-tab-box .tabs-content {
+    position: relative;
+    display: block;
+}
+
+.pricing-one__main-tab-box .tabs-content .tab {
+    position: relative;
+    display: none;
+    -webkit-transform: translateX(35px);
+    -ms-transform: translateX(35px);
+    transform: translateX(35px);
+    -webkit-transition: all 600ms ease;
+    -moz-transition: all 600ms ease;
+    -ms-transition: all 600ms ease;
+    -o-transition: all 600ms ease;
+    transition: all 600ms ease;
+    z-index: 10;
+}
+
+.pricing-one__main-tab-box .tabs-content .tab.active-tab {
+    display: block;
+    margin-top: 0px;
+    -webkit-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    transform: translateX(0px);
+}
+
+.pricing-one__inner {
+    position: relative;
+    display: block;
+}
+
+.pricing-one__single {
+    position: relative;
+    display: block;
+    border-radius: 15px;
+    background-color: var(--givewell-white);
+    border: 1px solid rgba(var(--givewell-black-rgb), .10);
+    margin-left: 88px;
+    padding: 34px 34px 34px;
+    margin-bottom: 30px;
+}
+
+.pricing-one__tag {
+    position: absolute;
+    left: -185px;
+    top: 215px;
+    text-align: center;
+    transform: rotate(-90deg);
+    background-color: #f1f6f7;
+    border: 1px solid rgba(var(--givewell-black-rgb), .10);
+    padding: 15px 35px 19px;
+    max-width: 300px;
+    width: 100%;
+    z-index: 1;
+}
+
+.pricing-one__tag span {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 34px;
+    text-transform: capitalize;
+    color: var(--givewell-black);
+}
+
+.pricing-one__price {
+    position: absolute;
+    right: 0;
+    top: 34px;
+    background-color: #122f2a;
+    padding: 12px 35px 12px;
+    border-top-left-radius: 35px;
+    border-bottom-left-radius: 35px;
+}
+
+.pricing-one__price p {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 46px;
+    color: var(--givewell-white);
+}
+
+.pricing-one__price p i {
+    font-size: 18px;
+    line-height: 28px;
+    position: relative;
+    top: -14px;
+    margin-right: 2px;
+}
+
+.pricing-one__price p span {
+    font-size: 18px;
+    line-height: 28px;
+}
+
+.pricing-one__icon {
+    position: relative;
+    display: inline-block;
+}
+
+.pricing-one__icon span {
+    position: relative;
+    display: inline-block;
+    font-size: 70px;
+    color: #dce0df;
+    transition: all 500ms linear;
+    transition-delay: 0.1s;
+    transform: scale(1);
+}
+
+.pricing-one__single:hover .pricing-one__icon span {
+    transform: scale(0.9);
+}
+
+.pricing-one__title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px;
+    margin-top: 26px;
+    margin-bottom: 2px;
+}
+
+.pricing-one__title a {
+    color: var(--givewell-black);
+}
+
+.pricing-one__single-shape-1 {
+    position: relative;
+    display: block;
+}
+
+.pricing-one__single-shape-1 img {
+    width: auto;
+}
+
+.pricing-one__points {
+    position: relative;
+    display: block;
+    margin-top: 24px;
+    margin-bottom: 35px;
+}
+
+.pricing-one__points li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.pricing-one__points li+li {
+    margin-top: 17px;
+}
+
+.pricing-one__points-shape {
+    position: relative;
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-color: #f1f6f7;
+    border: 1px solid rgba(var(--givewell-black-rgb), .15);
+    border-radius: 50%;
+}
+
+.pricing-one__points li:nth-child(1) .pricing-one__points-shape::before {
+    background-color: var(--givewell-primary);
+}
+
+.pricing-one__points-shape::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background-color: #122f2a;
+    border-radius: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.pricing-one__btn-box {
+    position: relative;
+    display: block;
+}
+
+.pricing-one__inner ul li:nth-child(2) .pricing-one__btn {
+    background-color: var(--givewell-primary);
+}
+
+.pricing-one__inner ul li:nth-child(2) .pricing-one__btn::before {
+    background-color: var(--givewell-base);
+}
+
+.pricing-one__inner ul li:nth-child(3) .pricing-one__btn {
+    background-color: #7f38e4;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------
+# End
+--------------------------------------------------------------*/

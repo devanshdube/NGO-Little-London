@@ -1,0 +1,100 @@
+/*==============================================
+   Get App
+===============================================*/
+.get-app {
+    position: relative;
+    display: block;
+    z-index: 2;
+}
+
+.get-app__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background-color: var(--givewell-base);
+    border-radius: 5px;
+    padding: 15px 40px 15px;
+}
+
+.get-app__title {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--givewell-white);
+    line-height: 40px;
+}
+
+.get-app__content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 35px;
+}
+
+.get-app__text {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--givewell-white);
+}
+
+.get-app__btn-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.get-app__btn-1 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: var(--givewell-black);
+    font-weight: 500;
+    background-color: var(--givewell-white);
+    padding: 14px 20px 14px;
+    border-radius: 4px;
+}
+
+.get-app__btn-1 img {
+    width: auto;
+}
+
+.get-app__btn-1:hover {
+    background-color: var(--givewell-black);
+    color: var(--givewell-white);
+}
+
+.get-app__btn-2 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 54px;
+    width: 54px;
+    border: 1px solid var(--givewell-white);
+    border-radius: 4px;
+    color: var(--givewell-white);
+    font-size: 20px;
+}
+
+.get-app__btn-2:hover {
+    background-color: var(--givewell-black);
+    border: 1px solid var(--givewell-black);
+    color: var(--givewell-white);
+}
+
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------
+# End
+--------------------------------------------------------------*/

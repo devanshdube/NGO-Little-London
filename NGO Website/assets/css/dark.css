@@ -1,0 +1,320 @@
+body,
+body.boxed-wrapper .page-wrapper,
+.main-menu__wrapper-inner,
+.stricky-header.main-menu,
+.main-slider,
+.about-one,
+.services-one__left,
+.services-one__single::before,
+.benefits-one__single-inner,
+.event-one__date-box,
+.banner-one {
+    background-color: var(--givewell-black);
+}
+
+
+
+
+.about-one__help-box-content,
+.services-one__single,
+.case-one__content,
+.case-one__days-and-count,
+.event-one__single,
+.team-one__single,
+.testimonial-one,
+.blog-one__content,
+.main-menu__search,
+.main-menu__cart a,
+.donation-form-one,
+.about-one__left .list-item li .icon,
+.donars-one__content {
+    background-color: #272727;
+}
+
+
+.main-menu .main-menu__list>li>a,
+.stricky-header .main-menu__list>li>a,
+.main-menu .main-menu__list>li.dropdown>a:after,
+.main-menu__account-icon span,
+.main-menu__account-text a,
+.main-menu__search,
+.section-title__tagline,
+.section-title__title,
+.about-one__points-box li p,
+.services-one__title a,
+.services-one__read-more a,
+.case-one__title a,
+.case-one__days-and-count li .content h3,
+.benefits-one__title a,
+.event-one__title a,
+.team-one__title a,
+.blog-one__newsletter-title,
+.blog-one__title a,
+.blog-one__user-text,
+.main-menu__cart a,
+.banner-one__title,
+.banner-one__title-two,
+.about-one__left .list-item li .title h3,
+.about-one__icon-and-title h3,
+.donation-form-one .inner-title h3,
+.donars-one__title a {
+    color: var(--givewell-white);
+}
+
+
+
+.about-one__text,
+.testimonial-one__text,
+.blog-one__newsletter-text,
+.blog-one__newsletter-input-icon span,
+.blog-one__newsletter-form .checked-box label,
+.blog-one__text {
+    color: #949494;
+}
+
+
+.main-menu .main-menu__list>li.current>a,
+.main-menu .main-menu__list>li:hover>a,
+.stricky-header .main-menu__list>li.current>a,
+.stricky-header .main-menu__list>li:hover>a {
+    color: var(--givewell-base);
+}
+
+.main-menu .main-menu__list>li.current>a::after,
+.main-menu .main-menu__list>li:hover>a::after,
+.stricky-header .main-menu__list>li.current>a::after,
+.stricky-header .main-menu__list>li:hover>a::after {
+    color: var(--givewell-base);
+}
+
+.main-menu__account-and-search {
+    background-color: #272727;
+    border: 1px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.main-menu__search-box:before {
+    background-color: rgba(var(--givewell-white-rgb), .50);
+}
+
+.about-one__bg-shape img {
+    filter: invert(1);
+}
+
+.about-one__bg::before {
+    background-color: rgba(var(--givewell-black-rgb), .90);
+}
+
+.services-one__shape-1 img {
+    filter: invert(1);
+}
+
+.services-one__single:hover {
+    border: 1px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.case-one__main-tab-box .case-one-tab-buttons .p-tab-btn span {
+    color: var(--givewell-white);
+    border: 1px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.case-one__content-inner {
+    border: 1px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.case-one__days-and-count li .icon::before {
+    background-color: #323131;
+}
+
+.case-one__days-and-count li:nth-child(2)::before {
+    background-color: rgba(var(--givewell-white-rgb), .10);
+}
+
+.case-one__carousel.owl-carousel .owl-dots .owl-dot {
+    background-color: #272727;
+    border: 2px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.case-one__carousel.owl-carousel .owl-dot.active {
+    background-color: var(--givewell-base);
+    border: 2px solid var(--givewell-base);
+}
+
+.benefits-one__inner {
+    background-color: #201d1d;
+}
+
+.benefits-one__bg-shaddo {
+    background: rgb(32, 29, 29);
+    background: linear-gradient(90deg, rgba(32, 29, 29, 0) 0%, rgba(32, 29, 29, 1) 52%);
+}
+
+.benefits-one__single-shape-2 {
+    background-color: rgba(var(--givewell-white-rgb), .05);
+}
+
+.event-one__date-shape-1 img {
+    filter: invert(1);
+}
+
+.team-one__single::before {
+    border: 1px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.team-one__single-shape-3 img {
+    filter: invert(1);
+}
+
+.team-one__shape-1 img {
+    filter: invert(1);
+}
+
+.testimonial-one__bg-box {
+    background-color: #272727;
+}
+
+.testimonial-one__bg-box:before {
+    background: rgb(39, 39, 24390);
+    background: linear-gradient(90deg, rgba(39, 39, 39, 0) 0%, rgba(39, 39, 39, 1) 60%);
+}
+
+.testimonial-one__content-shape-bg {
+    filter: invert(1);
+}
+
+.testimonial-one__carousel.owl-theme .owl-nav .owl-prev,
+.testimonial-one__carousel.owl-theme .owl-nav .owl-next {
+    color: var(--givewell-white);
+    border: 2px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.blog-one__left {
+    border: 1px solid rgba(var(--givewell-white-rgb), .10);
+    background-color: #272727;
+}
+
+.blog-one__newsletter {
+    border-top: 1px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.blog-one__newsletter-input input[type="email"] {
+    background-color: rgba(var(--givewell-white-rgb), .10);
+    color: #949494;
+}
+
+.blog-one__newsletter-form .checked-box input[type="checkbox"]+label span {
+    border: 1px solid rgba(var(--givewell-white-rgb), .50);
+}
+
+.blog-one__newsletter-form .checked-box input[type="checkbox"]:checked+label span {
+    border-color: rgba(var(--givewell-white-rgb), .50);
+}
+
+.blog-one__newsletter-form .checked-box label span:before {
+    border-bottom: 1px solid rgba(var(--givewell-white-rgb), .50);
+    border-right: 1px solid rgba(var(--givewell-white-rgb), .50);
+}
+
+.blog-one__content {
+    border: 1px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+.blog-one__btn-box .thm-btn {
+    color: var(--givewell-white);
+    background-color: var(--givewell-black);
+}
+
+.blog-one__btn-box .thm-btn i {
+    background-color: rgba(var(--givewell-white-rgb), .06);
+}
+
+.benefits-one__shape-1 img {
+    filter: invert(1);
+}
+
+.banner-one__bg {
+    opacity: .03;
+}
+
+.banner-one__sub-title {
+    color: var(--givewell-base);
+}
+
+.banner-one__shape-2 {
+    opacity: 1;
+}
+
+.banner-one__shape-1 {
+    opacity: .05;
+}
+
+.banner-one__shape-5 img {
+    filter: grayscale(1);
+    opacity: 0.50;
+}
+
+.banner-one__img img {
+    filter: grayscale(0);
+}
+
+
+
+.donation-form-one form .form-group input[type="text"],
+.donation-form-one form .form-group input[type="email"] {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--givewell-white);
+}
+
+.donation-form-one form .nice-select {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #7b7b7b;
+}
+
+.donation-form-one form .form-group label {
+    color: var(--givewell-white);
+}
+
+.donation-form-one form .form-group ul li label {
+    color: var(--givewell-white);
+}
+
+.services-one__carousel.owl-theme .owl-nav .owl-prev,
+.services-one__carousel.owl-theme .owl-nav .owl-next {
+    background-color: #272727;
+    color: var(--givewell-white);
+}
+
+.donars-one__wrap .swiper-button-prev,
+.donars-one__wrap .swiper-button-next {
+    background-color: #272727;
+}
+
+.donars-one__wrap .swiper-button-prev svg,
+.donars-one__wrap .swiper-button-next svg {
+    color: var(--givewell-white);
+}
+
+.benefits-one__arrow a {
+    background-color: #272727;
+    color: var(--givewell-white);
+    border: 1px solid rgba(var(--givewell-white-rgb), .10);
+}
+
+
+.main-menu .mobile-nav__toggler:hover {
+    color: var(--givewell-white);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* The End */
