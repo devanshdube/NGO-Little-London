@@ -1,14 +1,24 @@
 import React, { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import SignInputField from "../../Components/SignInputField";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import SuccessAlert from "../../Components/Alerts/SuccessAlert";
+import ErrorAlert from "../../Components/Alerts/ErrorAlert";
+import { setUser } from "../../Redux/user/userSlice";
 
 const SignIn = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState({ type: "", message: "" });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,15 +32,72 @@ const SignIn = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log(formData);
+    if (!validateForm()) return;
+
+    try {
+      setLoading(true);
+
+      // 👇 Update this URL according to your backend
+      const response = await axios.post(
+        "http://localhost:5555/auth/api/ngo/login/login",
+        formData
+      );
+
+      if (response.data.status === "Success") {
+        const { user, token } = response.data; // ✅ Expecting {status, user, token}
+
+        // ✅ Store in Redux
+        dispatch(setUser({ user, token }));
+
+        // ✅ Show success alert
+        setAlert({ type: "success", message: `Welcome ${user.name}!` });
+
+        // ✅ Redirect after short delay
+        setTimeout(() => {
+          if (user.designation?.toLowerCase() === "admin") navigate("/admin");
+          else if (user.designation?.toLowerCase() === "employee")
+            navigate("/employee");
+          else navigate("/");
+        }, 1500);
+      } else {
+        setAlert({
+          type: "error",
+          message: response.data.message || "Login failed.",
+        });
+      }
+    } catch (error) {
+      setAlert({
+        type: "error",
+        message:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0b0c18] text-white px-4">
+      {/* ✅ Custom Alert */}
+      <div className="absolute top-5 right-5 z-50">
+        {alert.type === "success" && (
+          <SuccessAlert
+            message={alert.message}
+            onClose={() => setAlert({ type: "", message: "" })}
+          />
+        )}
+        {alert.type === "error" && (
+          <ErrorAlert
+            message={alert.message}
+            onClose={() => setAlert({ type: "", message: "" })}
+          />
+        )}
+      </div>
+
+      {/* ✅ Login Card */}
       <div className="bg-[#111326] p-10 rounded-2xl shadow-2xl w-full max-w-md sm:max-w-lg transition-all duration-300">
         <h2 className="text-3xl font-semibold mb-3 text-center">Sign In</h2>
         <p className="text-sm text-gray-400 mb-8 text-center">
@@ -64,9 +131,12 @@ const SignIn = () => {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 mt-2 rounded-md font-semibold transition-all text-sm tracking-wide shadow-md hover:shadow-purple-700/40"
+            disabled={loading}
+            className={`w-full ${
+              loading ? "bg-gray-600" : "bg-purple-600 hover:bg-purple-700"
+            } text-white py-3 mt-2 rounded-md font-semibold transition-all text-sm tracking-wide shadow-md hover:shadow-purple-700/40`}
           >
-            SIGN IN
+            {loading ? "Signing In..." : "SIGN IN"}
           </button>
         </form>
 
