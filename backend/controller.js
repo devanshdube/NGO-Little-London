@@ -2,7 +2,7 @@ const { db } = require("./connect");
 
 exports.postData = async (req, res) => {
   try {
-    const { name, email, phone, subject, message } = req.body;  
+    const { name, email, phone, subject, message } = req.body;
 
     if (!name || !email || !phone || !subject || !message) {
       return res.status(400).json({ error: "All fields are required" });
@@ -19,13 +19,11 @@ exports.postData = async (req, res) => {
           .status(500)
           .json({ error: "Database insertion ka issue hai" });
       }
-      res
-        .status(201)
-        .json({
-          status: "Success",
-          message: "Data inserted successfully",
-          data: result,
-        });
+      res.status(201).json({
+        status: "Success",
+        message: "Data inserted successfully",
+        data: result,
+      });
     });
   } catch (error) {
     console.error("Server error: ", error);
@@ -54,13 +52,11 @@ exports.updateData = async (req, res) => {
       console.error("Data update karne mein error: ", err);
       return res.status(500).json({ error: "Database update ka issue hai" });
     }
-    res
-      .status(200)
-      .json({
-        status: "Success",
-        message: "Data updated successfully",
-        data: result,
-      });
+    res.status(200).json({
+      status: "Success",
+      message: "Data updated successfully",
+      data: result,
+    });
   });
 };
 
@@ -72,12 +68,10 @@ exports.deleteData = async (req, res) => {
       console.error("Data delete karne mein error: ", err);
       return res.status(500).json({ error: "Database delete ka issue hai" });
     }
-    res
-      .status(200)
-      .json({
-        status: "Success",
-        message: "Data deleted successfully",
-        data: result,
-      });
+    res.status(200).json({
+      status: "Success",
+      message: "Data deleted successfully",
+      data: result,
+    });
   });
 };

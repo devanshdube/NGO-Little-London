@@ -4,11 +4,20 @@ CREATE DATABASE employetest;
 // use database query
 use employetest;
 
-// Database Query for create table
-CREATE TABLE emply (
+// ------ Database Query for create table ------- //
+CREATE TABLE employee (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  department VARCHAR(100) NOT NULL,
-  salary DECIMAL(10, 2) NOT NULL
+  f_name VARCHAR(100),
+  mobile VARCHAR(15),
+  email VARCHAR(255) NOT NULL UNIQUE,
+  designation VARCHAR(100) NOT NULL,
+  dob VARCHAR(100),
+  aadhar CHAR(12),
+  address VARCHAR(500),
+  city VARCHAR(100),
+  status ENUM('active','inactive') DEFAULT 'active',
+  user_profile VARCHAR(255),
+  password VARCHAR(255) NOT NULL
 );
 
