@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import SignInputField from "../../Components/SignInputField";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import SuccessAlert from "../../Components/Alerts/SuccessAlert";
 import ErrorAlert from "../../Components/Alerts/ErrorAlert";
@@ -80,7 +80,10 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0b0c18] text-white px-4">
+    <div
+      className="min-h-screen flex items-center justify-center bg-[#0b0c18] text-white px-4 font-sans"
+      style={{ fontFamily: "'Poppins', sans-serif" }}
+    >
       {/* ✅ Custom Alert */}
       <div className="absolute top-5 right-5 z-50">
         {alert.type === "success" && (
@@ -146,11 +149,11 @@ const SignIn = () => {
           <hr className="flex-1 border-gray-700" />
         </div>
 
-        <p className="text-center text-sm text-gray-400 mt-6">
-          Don’t have an account?{" "}
-          <a href="#" className="text-purple-400 hover:underline">
-            Sign Up
-          </a>
+        <p>
+          <Link to="/forgot-password"> Forgot Password?</Link>
+          {/* <a href="#" className="text-purple-400 hover:underline">
+            Forgot Password?
+          </a> */}
         </p>
       </div>
     </div>

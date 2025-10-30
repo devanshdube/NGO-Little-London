@@ -18,6 +18,7 @@ import DocumentsContent from "./Content/DocumentsContent";
 import UsersContent from "./Content/UsersContent";
 import AnalyticsContent from "./Content/AnalyticsContent";
 import SignIn from "../Auth/SignIn";
+import PaymentContent from "./Content/PaymentContent";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -30,6 +31,7 @@ export default function Dashboard() {
     { id: "documents", label: "Documents", icon: FileText },
     { id: "notifications", label: "Notifications", icon: Bell },
     { id: "settings", label: "Settings", icon: Settings },
+    { id: "payment", label: "payment", icon: Settings },
     { id: "login", label: "Login", icon: ShieldCheck },
   ];
 
@@ -47,6 +49,8 @@ export default function Dashboard() {
         return <NotificationsContent />;
       case "settings":
         return <SettingsContent />;
+      case "payment":
+        return <PaymentContent />;
       case "login":
         return <SignIn />;
       default:

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Dashboard from "./Modules/1/Dashboard";
 import SignIn from "./Modules/Auth/SignIn";
 import EmployeeDashboard from "./Modules/2/EmployeeDashboard";
+import ForgotPassword from "./Modules/Auth/ForgotPassword";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -19,6 +20,20 @@ function App() {
           element={
             !currentUser ? (
               <SignIn />
+            ) : role === "admin" ? (
+              <Dashboard />
+            ) : role === "employee" ? (
+              <EmployeeDashboard />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            !currentUser ? (
+              <ForgotPassword />
             ) : role === "admin" ? (
               <Dashboard />
             ) : role === "employee" ? (

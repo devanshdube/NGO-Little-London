@@ -1,38 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { X } from "lucide-react";
 
-const BaseAlert = ({ config, message, onClose, autoClose = 4000 }) => {
+const BaseAlert = ({ config = {}, message, onClose, autoClose = 4000 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+
   const [ripples, setRipples] = useState([]);
   const [particles, setParticles] = useState([]);
 
-  useEffect(() => {
-    setTimeout(() => setIsVisible(true), 10);
+  const visibleTimeoutRef = useRef(null);
+  const intervalRef = useRef(null);
 
-    const newParticles = Array.from({ length: 10 }, (_, i) => ({
-      id: i,
-      delay: i * 0.1,
-      angle: i * 36,
-      distance: 40 + Math.random() * 30
-    }));
-    setParticles(newParticles);
+  const {
+    icon: Icon = () => null,
+    shadow = "rgba(0,0,0,0.4)",
+    showRipples = false,
+    showParticles = false,
+    primary = "#fff",
+    secondary = "#bbb",
+    gradient = "#7c3aed",
+  } = config;
+
+  useEffect(() => {
+    visibleTimeoutRef.current = setTimeout(() => setIsVisible(true), 10);
+
+    if (showParticles) {
+      const newParticles = Array.from({ length: 10 }, (_, i) => ({
+        id: `${Date.now()}-${i}`,
+        delay: i * 0.1,
+        angle: i * 36,
+        distance: 40 + Math.random() * 30,
+      }));
+      setParticles(newParticles);
+    }
 
     if (autoClose) {
       const startTime = Date.now();
-      const interval = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         const elapsed = Date.now() - startTime;
-        const newProgress = (elapsed / autoClose) * 100;
+        const newProgress = Math.min(100, (elapsed / autoClose) * 100);
         setProgress(newProgress);
         if (newProgress >= 100) {
-          clearInterval(interval);
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
           handleClose();
         }
-      }, 16);
-
-      return () => clearInterval(interval);
+      }, 100);
     }
-  }, [autoClose]);
+
+    return () => {
+      clearTimeout(visibleTimeoutRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [autoClose, showParticles]);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -40,61 +60,72 @@ const BaseAlert = ({ config, message, onClose, autoClose = 4000 }) => {
   };
 
   const createRipple = (e) => {
+    if (!showRipples) return;
+
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const id = Date.now();
-    setRipples(prev => [...prev, { id, x, y }]);
+    const id = Date.now() + Math.random();
+    setRipples((prev) => [...prev, { id, x, y }]);
     setTimeout(() => {
-      setRipples(prev => prev.filter(r => r.id !== id));
-    }, 1000);
+      setRipples((prev) => prev.filter((r) => r.id !== id));
+    }, 900);
   };
-
-  const Icon = config.icon;
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl transition-all duration-500 transform 
-        ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}
-      style={{
-        minWidth: '300px',
-        maxWidth: '420px',
-        background: 'rgba(15, 23, 42, 0.95)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        boxShadow: `0 10px 30px ${config.shadow}`
-      }}
+      role="status"
+      aria-live="polite"
       onClick={createRipple}
+      className={`relative overflow-hidden rounded-2xl transition-all duration-500 transform 
+        ${
+          isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
+        }`}
+      style={{
+        minWidth: 300,
+        maxWidth: 420,
+        background: "rgba(15, 23, 42, 0.95)",
+        border: "1px solid rgba(255,255,255,0.06)",
+        boxShadow: `0 10px 30px ${shadow}`,
+        cursor: showRipples ? "pointer" : "default",
+      }}
     >
-      {ripples.map(r => (
-        <div
-          key={r.id}
-          className="absolute rounded-full animate-ping"
-          style={{
-            left: r.x, top: r.y, width: 10, height: 10,
-            background: config.primary, transform: 'translate(-50%, -50%)'
-          }}
-        />
-      ))}
+      {showRipples &&
+        ripples.map((r) => (
+          <div
+            key={r.id}
+            className="absolute rounded-full animate-ping"
+            style={{
+              left: r.x,
+              top: r.y,
+              width: 10,
+              height: 10,
+              background: primary,
+              transform: "translate(-50%, -50%)",
+              pointerEvents: "none",
+            }}
+          />
+        ))}
 
-      {particles.map(p => (
-        <div
-          key={p.id}
-          className="absolute w-1 h-1 rounded-full"
-          style={{
-            background: config.secondary,
-            left: '50%', top: '50%',
-            animation: `floatParticle 3s ease-in-out infinite`,
-            animationDelay: `${p.delay}s`,
-            transform: `translate(-50%, -50%) rotate(${p.angle}deg) translateY(${p.distance}px)`,
-            opacity: 0
-          }}
-        />
-      ))}
+      {showParticles &&
+        particles.map((p) => (
+          <div
+            key={p.id}
+            className="absolute w-1 h-1 rounded-full"
+            style={{
+              background: secondary,
+              left: "50%",
+              top: "50%",
+              animation: `baseAlertFloat 3s ease-in-out ${p.delay}s infinite`,
+              pointerEvents: "none",
+            }}
+          />
+        ))}
 
       <div className="relative z-10 p-5 flex items-start gap-4">
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center"
-          style={{ background: config.gradient }}
+          style={{ background: gradient }}
         >
           <Icon className="w-6 h-6 text-white" />
         </div>
@@ -104,8 +135,12 @@ const BaseAlert = ({ config, message, onClose, autoClose = 4000 }) => {
         </div>
 
         <button
-          onClick={(e) => { e.stopPropagation(); handleClose(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClose();
+          }}
           className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-white"
+          aria-label="Close alert"
         >
           <X className="w-4 h-4" />
         </button>
@@ -116,15 +151,16 @@ const BaseAlert = ({ config, message, onClose, autoClose = 4000 }) => {
           className="h-full transition-all"
           style={{
             width: `${progress}%`,
-            background: config.gradient
+            background: gradient,
           }}
         />
       </div>
 
-      <style jsx>{`
-        @keyframes floatParticle {
-          0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-          50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+      <style>{`
+        @keyframes baseAlertFloat {
+          0% { transform: translate(-50%, -50%) translateY(0) scale(0); opacity: 0; }
+          50% { transform: translate(-50%, -50%) translateY(-20px) scale(1); opacity: 0.8; }
+          100% { transform: translate(-50%, -50%) translateY(0) scale(0); opacity: 0; }
         }
       `}</style>
     </div>
