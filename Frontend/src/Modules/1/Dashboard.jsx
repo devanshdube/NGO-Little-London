@@ -11,6 +11,9 @@ import {
   ChevronsRight,
   ShieldCheck,
 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../Redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 import DashboardContent from "./Content/DashboardContent";
 import SettingsContent from "./Content/SettingsContent";
 import NotificationsContent from "./Content/NotificationsContent";
@@ -23,6 +26,11 @@ import PaymentContent from "./Content/PaymentContent";
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeMenu, setActiveMenu] = useState("dashboard");
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: Home },
@@ -56,6 +64,18 @@ export default function Dashboard() {
       default:
         return <DashboardContent />;
     }
+  };
+
+  const currentUser = useSelector((state) => state.user.currentUser);
+
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+
+    setTimeout(() => {
+      dispatch(logout());
+      localStorage.removeItem("token");
+      navigate("/signin");
+    }, 1200); // Fake loading (1.2 sec)
   };
 
   return (
@@ -112,19 +132,68 @@ export default function Dashboard() {
 
         {/* Sidebar Footer */}
         <div className="p-4 border-t border-[#805dca]">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-[#805dca] flex items-center justify-center font-bold">
-              U
+              {currentUser?.name?.charAt(0) || "U"}
             </div>
             {sidebarOpen && (
               <div>
-                <p className="font-medium text-sm">User Name</p>
-                <p className="text-xs text-[#4361ee]">user@email.com</p>
+                <p className="font-medium text-sm">
+                  {currentUser?.name || "User"}
+                </p>
+                <p className="text-xs text-[#4361ee]">{currentUser?.email}</p>
               </div>
             )}
           </div>
+
+          {/* ✅ Logout Button */}
+          <button
+            onClick={() => setShowLogoutModal(true)}
+            className="w-full flex items-center gap-3 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg backdrop-blur-md transition"
+          >
+            <ShieldCheck size={20} />
+            {sidebarOpen && <span>Logout</span>}
+          </button>
         </div>
       </div>
+
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+          <div
+            className="bg-[#0e1726] p-6 rounded-2xl shadow-xl w-full max-w-sm text-white 
+      border border-[#805dca]/40 animate-slideUp"
+          >
+            <h2 className="text-xl font-semibold mb-2">Are you sure?</h2>
+            <p className="text-gray-400 mb-6">
+              Do you really want to logout from your account?
+            </p>
+
+            <div className="flex justify-end gap-3">
+              {/* Cancel */}
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="px-4 py-2 rounded-lg bg-[#1b2e4b] hover:bg-[#263d63] transition"
+              >
+                Cancel
+              </button>
+
+              {/* Logout + Loading */}
+              <button
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className={`px-4 py-2 rounded-lg transition 
+          ${
+            isLoggingOut
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-[#805dca] hover:bg-[#6c49b4]"
+          }`}
+              >
+                {isLoggingOut ? "Logging out..." : "Yes, Logout"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
