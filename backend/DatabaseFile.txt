@@ -21,3 +21,33 @@ CREATE TABLE employee (
   password VARCHAR(255) NOT NULL
 );
 
+
+CREATE TABLE IF NOT EXISTS payment (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  amount DECIMAL(12,2) NOT NULL,
+  paymentMethod ENUM('Cash','UPI','Net Banking') NOT NULL,
+
+  -- bank / netbanking fields
+  bankName VARCHAR(255) DEFAULT NULL,
+  branchName VARCHAR(255) DEFAULT NULL,
+  bankTxnRef VARCHAR(255) DEFAULT NULL,
+
+  -- UPI / transaction fields
+  txnId VARCHAR(255) DEFAULT NULL,
+
+  panNo VARCHAR(20) DEFAULT NULL,
+
+  screenshot VARCHAR(512) DEFAULT NULL,
+
+  remarks TEXT DEFAULT NULL,
+
+  created_at VARCHAR(255),
+  updated_at VARCHAR(255) DEFAULT NULL,
+
+  INDEX idx_phone (phone),
+  INDEX idx_paymentMethod (paymentMethod)
+);
+
+

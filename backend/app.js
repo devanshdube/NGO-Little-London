@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
 // const apiRouter = require("./apiRouter");
 const postRouter = require("./Router/routerPost");
 const authRouter = require("./Router/routerAuth");
@@ -16,6 +18,7 @@ app.use("/auth/api/ngo/get", getRouter);
 // app.use("/auth/api/ngo/update", apiRouter);
 // app.use("/auth/api/ngo/delete", apiRouter);
 app.use("/auth/api/ngo/login", authRouter);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const PORT = process.env.PORT || 5555;
 app.listen(PORT, () => {
