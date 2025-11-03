@@ -1,85 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Edit, Trash2, UserPlus, Search, X } from "lucide-react";
 import InputField from "../../../Components/InputField";
+import axios from "axios";
 
-// Generate 50 dummy users
-const generateUsers = () => {
-  const names = [
-    "Rahul Kumar",
-    "Priya Sharma",
-    "Amit Singh",
-    "Sneha Patel",
-    "Vijay Gupta",
-    "Anjali Verma",
-    "Raj Malhotra",
-    "Neha Kapoor",
-    "Sanjay Reddy",
-    "Pooja Joshi",
-    "Arjun Mehta",
-    "Kavya Nair",
-    "Rohit Desai",
-    "Divya Iyer",
-    "Karan Bhatt",
-    "Riya Chopra",
-    "Aditya Saxena",
-    "Simran Kaur",
-    "Manish Agarwal",
-    "Tanvi Shah",
-    "Nikhil Pillai",
-    "Ishita Bansal",
-    "Akash Rao",
-    "Meera Kulkarni",
-    "Varun Sinha",
-    "Sakshi Pandey",
-    "Harsh Tiwari",
-    "Nisha Dubey",
-    "Gaurav Mishra",
-    "Ananya Roy",
-    "Deepak Ghosh",
-    "Swati Bose",
-    "Vishal Sethi",
-    "Megha Chawla",
-    "Suresh Yadav",
-    "Kritika Khanna",
-    "Ashish Jain",
-    "Pallavi Menon",
-    "Rakesh Thakur",
-    "Shruti Das",
-    "Mohit Chauhan",
-    "Ritu Bhatia",
-    "Naveen Kumar",
-    "Preeti Ahuja",
-    "Sachin Goyal",
-    "Madhuri Patil",
-    "Tarun Singhal",
-    "Aditi Arora",
-    "Pankaj Sharma",
-    "Sonali Gupta",
-  ];
-
-  const roles = ["Admin", "User", "Manager", "Moderator"];
-  const statuses = ["Active", "Inactive"];
-
-  return names.map((name, i) => ({
-    id: i + 1,
-    name,
-    email: `${name.toLowerCase().replace(/\s+/g, ".")}@email.com`,
-    role: roles[Math.floor(Math.random() * roles.length)],
-    status: statuses[Math.floor(Math.random() * statuses.length)],
-    joinDate: new Date(
-      2023,
-      Math.floor(Math.random() * 12),
-      Math.floor(Math.random() * 28) + 1
-    )
-      .toISOString()
-      .split("T")[0],
-  }));
-};
-
-const CHUNK_SIZE = 5; // Load 10 users at a time
+const API_URL = "http://localhost:5555/auth/api/ngo/get/getAllUser";
+const CHUNK_SIZE = 5;
 
 const UsersContent = () => {
-  const [allUsers] = useState(generateUsers());
+  const [users, setUsers] = useState([]);
   const [displayedUsers, setDisplayedUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,36 +21,66 @@ const UsersContent = () => {
   const filteredUsersRef = useRef([]);
   const displayedUsersRef = useRef([]);
 
-  // Apply filters (also handles initial load)
-  useEffect(() => {
-    console.log("🔄 Filters changed, resetting data...");
-    let filtered = allUsers;
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState(null);
 
-    // Search filter
-    if (searchTerm) {
+  // fetchUsers stable with empty deps so useEffect won't loop
+  const fetchUsers = useCallback(async () => {
+    try {
+      setIsFetching(true);
+      setError(null);
+      const res = await axios.get(API_URL, { timeout: 15000 });
+      if (res?.data?.status === "Success" && Array.isArray(res.data.data)) {
+        const getAllUsers = res.data.data.map((p) => ({
+          ...p,
+          // ensure createdDate is just yyyy-mm-dd for easier filtering
+          createdDate: p.created_at ? p.created_at.slice(0, 10) : null,
+        }));
+        setUsers(getAllUsers);
+      } else {
+        setError("API returned unexpected data.");
+        setUsers([]);
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setError(err?.response?.data?.message || err.message || "Network error");
+      setUsers([]);
+    } finally {
+      setIsFetching(false);
+    }
+  }, []); // <-- important: stable function
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  // Apply filters and reset displayed chunk
+  useEffect(() => {
+    let filtered = users.slice();
+
+    // Search filter (name, mobile, email)
+    if (searchTerm.trim()) {
+      const q = searchTerm.trim().toLowerCase();
+      filtered = filtered.filter((p) => {
+        const name = String(p.name || "").toLowerCase();
+        const mobile = String(p.mobile || "").toLowerCase();
+        const email = String(p.email || "").toLowerCase();
+        return name.includes(q) || mobile.includes(q) || email.includes(q);
+      });
+    }
+
+    // Status filter (case-insensitive)
+    if (statusFilter) {
+      const sf = statusFilter.toLowerCase();
       filtered = filtered.filter(
-        (user) =>
-          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchTerm.toLowerCase())
+        (user) => String(user.status || "").toLowerCase() === sf
       );
     }
 
-    // Role filter
-    if (roleFilter) {
-      filtered = filtered.filter((user) => user.role === roleFilter);
-    }
-
-    // Status filter
-    if (statusFilter) {
-      filtered = filtered.filter((user) => user.status === statusFilter);
-    }
-
-    // Date filter
+    // Date filter (compare createdDate which is yyyy-mm-dd)
     if (dateFilter) {
-      filtered = filtered.filter((user) => user.joinDate === dateFilter);
+      filtered = filtered.filter((user) => user.createdDate === dateFilter);
     }
-
-    console.log("📊 Filtered users count:", filtered.length);
 
     filteredUsersRef.current = filtered;
     displayedUsersRef.current = filtered.slice(0, CHUNK_SIZE);
@@ -130,102 +88,55 @@ const UsersContent = () => {
     setFilteredUsers(filtered);
     setDisplayedUsers(filtered.slice(0, CHUNK_SIZE));
     setHasMore(filtered.length > CHUNK_SIZE);
+  }, [users, searchTerm, statusFilter, dateFilter]);
 
-    console.log(
-      "✅ Initial display:",
-      CHUNK_SIZE,
-      "Has more:",
-      filtered.length > CHUNK_SIZE
-    );
-  }, [searchTerm, roleFilter, statusFilter, dateFilter, allUsers]);
-
-  // Load more data
-  const loadMoreUsers = useCallback(() => {
-    if (isLoading || !hasMore) {
-      console.log(
-        "⛔ Load blocked - isLoading:",
-        isLoading,
-        "hasMore:",
-        hasMore
-      );
-      return;
-    }
-
-    console.log("📥 Loading more users...");
+  // Load more data (append next chunk)
+  const loadMore = useCallback(() => {
+    if (isLoading || !hasMore) return;
     setIsLoading(true);
 
-    // Simulate network delay
     setTimeout(() => {
-      const currentDisplayed = displayedUsersRef.current.length;
-      const currentFiltered = filteredUsersRef.current;
-      const startIndex = currentDisplayed;
-      const endIndex = startIndex + CHUNK_SIZE;
-      const newUsers = currentFiltered.slice(startIndex, endIndex);
-
-      console.log("📍 Current displayed:", currentDisplayed);
-      console.log("📍 Loading from index:", startIndex, "to", endIndex);
-      console.log("📍 New users to add:", newUsers.length);
-      console.log("📍 Total filtered:", currentFiltered.length);
-
-      if (newUsers.length > 0) {
-        setDisplayedUsers((prev) => {
-          const updated = [...prev, ...newUsers];
-          displayedUsersRef.current = updated;
-          console.log("✅ Updated displayed count:", updated.length);
-          return updated;
-        });
-        setHasMore(endIndex < currentFiltered.length);
-        console.log(
-          "🔄 Has more after load:",
-          endIndex < currentFiltered.length
-        );
+      const currentLen = displayedUsersRef.current.length;
+      const nextChunk = filteredUsersRef.current.slice(
+        currentLen,
+        currentLen + CHUNK_SIZE
+      );
+      if (nextChunk.length > 0) {
+        const updated = [...displayedUsersRef.current, ...nextChunk];
+        displayedUsersRef.current = updated;
+        setDisplayedUsers(updated);
+        setHasMore(updated.length < filteredUsersRef.current.length);
       } else {
         setHasMore(false);
-        console.log("🏁 No more users to load");
       }
-
       setIsLoading(false);
-    }, 500);
+    }, 350);
   }, [isLoading, hasMore]);
 
   // Infinite scroll observer
   useEffect(() => {
     const scrollContainer = document.querySelector(".user-scroll-container");
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          console.log("👀 Observer triggered - intersecting!");
-          console.log("   hasMore:", hasMore, "isLoading:", isLoading);
-          if (hasMore && !isLoading) {
-            loadMoreUsers();
-          }
+          if (hasMore && !isLoading) loadMore();
         }
       },
-      {
-        root: scrollContainer,
-        rootMargin: "100px", // Load a bit before reaching bottom
-        threshold: 0.1,
-      }
+      { root: scrollContainer, rootMargin: "150px", threshold: 0.1 }
     );
 
     const target = observerTarget.current;
-    if (target) {
-      console.log("👁️ Observer attached to target");
-      observer.observe(target);
-    }
+    if (target) observer.observe(target);
 
     return () => {
-      if (target) {
-        observer.unobserve(target);
-      }
+      if (target) observer.unobserve(target);
+      observer.disconnect();
     };
-  }, [hasMore, isLoading, loadMoreUsers]);
+  }, [hasMore, isLoading, loadMore]);
 
   // Reset all filters
   const handleReset = () => {
     setSearchTerm("");
-    setRoleFilter("");
     setStatusFilter("");
     setDateFilter("");
   };
@@ -253,35 +164,12 @@ const UsersContent = () => {
                 placeholder="Search by name or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                icon={Search} // icon pass karenge
+                icon={Search}
               />
-              {/* <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
-              />
-              <input
-                type="text"
-                placeholder="Search by name or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              /> */}
             </div>
 
             {/* Filters Row */}
             <div className="flex flex-wrap gap-3 items-center">
-              <select
-                value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                <option value="">All Roles</option>
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
-                <option value="Manager">Manager</option>
-                <option value="Moderator">Moderator</option>
-              </select>
-
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -328,16 +216,28 @@ const UsersContent = () => {
                   Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Phone
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Email
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Role
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  DOB
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Aadhar
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Address
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Join Date
+                  Profile
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Actions
@@ -350,23 +250,50 @@ const UsersContent = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">
-                        {user.name[0]}
+                        {user.name?.[0] || "U"}
                       </div>
                       <span className="font-medium">{user.name}</span>
                     </div>
                   </td>
+
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {user.email}
+                    {user.mobile}
                   </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
-                      {user.role}
+                      {user.email}
                     </span>
                   </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
+                      {user.designation}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
+                      {user.dob}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
+                      {user.aadhar}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
+                      {user.address}, {user.city}
+                    </span>
+                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 rounded text-sm ${
-                        user.status === "Active"
+                        String(user.status || "").toLowerCase() === "active"
                           ? "bg-green-100 text-green-800"
                           : "bg-red-100 text-red-800"
                       }`}
@@ -374,9 +301,27 @@ const UsersContent = () => {
                       {user.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600 text-sm">
-                    {user.joinDate}
+
+                  <td className="px-4 py-3 whitespace-nowrap text-sm">
+                    {user.user_profile ? (
+                      <a
+                        href={user.user_profile}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2"
+                      >
+                        <img
+                          src={user.user_profile}
+                          alt="profile"
+                          className="w-14 h-10 object-cover rounded border"
+                        />
+                        <span className="text-xs text-blue-600">View</span>
+                      </a>
+                    ) : (
+                      <span className="text-xs text-gray-400">No</span>
+                    )}
                   </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex gap-2">
                       <button className="p-1 text-blue-600 hover:bg-blue-50 rounded">
@@ -400,7 +345,7 @@ const UsersContent = () => {
           )}
 
           {/* Intersection observer target */}
-          <div ref={observerTarget} className="h-4 bg-transparent"></div>
+          <div ref={observerTarget} className="h-4 bg-transparent" />
 
           {/* End of results message */}
           {!hasMore && displayedUsers.length > 0 && (

@@ -10,6 +10,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
   ShieldCheck,
+  IndianRupee,
+  CreditCard,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Redux/user/userSlice";
@@ -22,6 +24,7 @@ import UsersContent from "./Content/UsersContent";
 import AnalyticsContent from "./Content/AnalyticsContent";
 import SignIn from "../Auth/SignIn";
 import PaymentContent from "./Content/PaymentContent";
+import PaymentHistory from "./Content/PaymentHistory";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -39,8 +42,8 @@ export default function Dashboard() {
     { id: "documents", label: "Documents", icon: FileText },
     { id: "notifications", label: "Notifications", icon: Bell },
     { id: "settings", label: "Settings", icon: Settings },
-    { id: "payment", label: "payment", icon: Settings },
-    { id: "login", label: "Login", icon: ShieldCheck },
+    { id: "payment", label: "Payment", icon: IndianRupee },
+    { id: "payment-history", label: "Payment History", icon: CreditCard },
   ];
 
   const renderContent = () => {
@@ -59,6 +62,8 @@ export default function Dashboard() {
         return <SettingsContent />;
       case "payment":
         return <PaymentContent />;
+      case "payment-history":
+        return <PaymentHistory />;
       case "login":
         return <SignIn />;
       default:

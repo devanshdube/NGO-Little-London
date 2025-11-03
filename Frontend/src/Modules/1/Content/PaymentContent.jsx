@@ -1,23 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import SmartAlert from "../../../Components/Alerts/SmartAlert";
 import { UploadCloud } from "lucide-react";
-
-/**
- * PaymentFormIntegrated
- *
- * Usage:
- * - Place your UPI QR image in public/assets/upi-qr.png or set QR_IMAGE_URL to any accessible URL.
- * - Make sure backend URL is correct.
- *
- * Notes:
- * - API endpoint: http://localhost:5555/auth/api/ngo/post/postPayment
- * - This component sends multipart/form-data with `screenshot` file and other text fields.
- */
+import QRCode from "./../../../assets/upi-qr.jpg";
 
 const API_URL = "http://localhost:5555/auth/api/ngo/post/postPayment";
-// If you have a local QR image, put it in public/assets/upi-qr.png and use below path:
-const QR_IMAGE_URL = "/assets/upi-qr.png"; // <-- change if needed
 
 const PaymentContent = () => {
   // form fields
@@ -60,9 +47,7 @@ const PaymentContent = () => {
     setTxnId("");
     setPanNo("");
     setRemarks("");
-    if (filePreview) {
-      URL.revokeObjectURL(filePreview);
-    }
+    if (filePreview) URL.revokeObjectURL(filePreview);
     setFile(null);
     setFilePreview(null);
     if (fileRef.current) fileRef.current.value = null;
@@ -139,26 +124,49 @@ const PaymentContent = () => {
 
     // build FormData for multipart
     const formData = new FormData();
+    // append only fields that make sense for each payment method
+    if (paymentMethod === "UPI") {
+      formData.append("txnId", txnId.trim());
+      formData.append("panNo", panNo.trim());
+    }
+
+    if (paymentMethod === "Net Banking") {
+      formData.append("bankName", bankName.trim());
+      formData.append("branchName", branchName.trim());
+      formData.append("bankTxnRef", bankTxnRef.trim());
+      formData.append("panNo", panNo.trim());
+    }
+
+    if (paymentMethod === "Cash") {
+      formData.append("panNo", panNo.trim());
+    }
+
     formData.append("name", name.trim());
     formData.append("phone", phone.trim());
     formData.append("amount", String(amount));
     formData.append("paymentMethod", paymentMethod);
-    formData.append("bankName", bankName.trim());
-    formData.append("branchName", branchName.trim());
-    formData.append("bankTxnRef", bankTxnRef.trim());
-    formData.append("txnId", txnId.trim());
-    formData.append("panNo", panNo.trim());
     formData.append("remarks", remarks.trim());
-    if (file) formData.append("screenshot", file); // IMPORTANT: backend expects 'screenshot'
+    if (file) formData.append("screenshot", file);
+
+    // formData.append("name", name.trim());
+    // formData.append("phone", phone.trim());
+    // formData.append("amount", String(amount));
+    // formData.append("paymentMethod", paymentMethod);
+    // formData.append("bankName", bankName.trim());
+    // formData.append("branchName", branchName.trim());
+    // formData.append("bankTxnRef", bankTxnRef.trim());
+    // formData.append("txnId", txnId.trim());
+    // formData.append("panNo", panNo.trim());
+    // formData.append("remarks", remarks.trim());
+    // if (file) formData.append("screenshot", file);
 
     try {
       setUploading(true);
       setProgress(0);
 
       const res = await axios.post(API_URL, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        // DO NOT set Content-Type manually for FormData
         onUploadProgress: (evt) => {
-          // evt.loaded / evt.total may be undefined in some cases
           if (evt.total) {
             const pct = Math.round((evt.loaded * 100) / evt.total);
             setProgress(pct);
@@ -170,7 +178,6 @@ const PaymentContent = () => {
       if (res?.data?.status === "Success" || res?.status === 201) {
         showAlert("success", res.data?.message || "Payment recorded.");
         setSubmittedId(res.data?.insertedId || res.data?.inserted_id || null);
-        // keep record, reset after short delay or let user reset manually
         setTimeout(() => resetForm(), 1700);
       } else {
         showAlert(
@@ -194,8 +201,21 @@ const PaymentContent = () => {
     }
   };
 
-  // Whether to show the provided QR image (when method is UPI)
-  const showProvidedQR = paymentMethod === "UPI";
+  // Static organization bank details (edit with your real info)
+  const ORGANIZATION_BANK = {
+    bankName: "State Bank of India",
+    accountNo: "123456789012",
+    ifsc: "SBIN0001234",
+    branch: "Jabalpur Main Branch",
+  };
+
+  // auto-fill bankName & branchName when method is Net Banking
+  useEffect(() => {
+    if (paymentMethod === "Net Banking") {
+      setBankName(ORGANIZATION_BANK.bankName);
+      setBranchName(ORGANIZATION_BANK.branch);
+    }
+  }, [paymentMethod]);
 
   return (
     <div className="container mx-auto p-4">
@@ -204,11 +224,12 @@ const PaymentContent = () => {
         onClose={() => setAlert({ type: "", message: "" })}
       />
 
-      {/* Layout: left = form, right = QR + upload when md+ */}
+      {/* Layout: left = form, right = QR + upload; stacked on small/medium, side-by-side on XL */}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-xl font-semibold mb-4">Record Payment</h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* key change: only make two columns on XL screens */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* LEFT: form */}
           <div>
             <form onSubmit={handleSubmit}>
@@ -227,11 +248,18 @@ const PaymentContent = () => {
                 <div>
                   <label className="text-sm font-medium">Phone</label>
                   <input
+                    type="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      // Allow only numbers
+                      const value = e.target.value.replace(/[^0-9]/g, "");
+                      setPhone(value);
+                    }}
                     className="w-full mt-1 p-2 border rounded"
                     placeholder="Phone number"
                     required
+                    minLength={10}
+                    maxLength={10}
                   />
                 </div>
 
@@ -369,12 +397,12 @@ const PaymentContent = () => {
                 <label className="text-sm font-medium">
                   Upload Screenshot / Receipt
                 </label>
-                <div className="mt-2 border border-dashed rounded p-3 flex items-center gap-3">
+                <div className="mt-2 border border-dashed rounded p-3 flex flex-col sm:flex-row sm:items-center gap-3">
                   <div className="p-2 bg-gray-50 rounded">
                     <UploadCloud size={20} />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <label className="px-3 py-1 bg-purple-600 text-white rounded cursor-pointer">
                         Choose file
                         <input
@@ -419,7 +447,7 @@ const PaymentContent = () => {
                 </div>
               </div>
 
-              <div className="mt-6 flex gap-3">
+              <div className="mt-6 flex flex-wrap gap-3">
                 <button
                   type="submit"
                   disabled={uploading}
@@ -452,7 +480,7 @@ const PaymentContent = () => {
             </form>
           </div>
 
-          {/* RIGHT: QR image + small instructions (always visible on md & up) */}
+          {/* RIGHT: QR image + small instructions */}
           <div className="flex flex-col items-stretch">
             <div className="bg-gray-50 p-4 rounded border">
               <div className="flex items-center justify-between">
@@ -462,27 +490,86 @@ const PaymentContent = () => {
                 </div>
               </div>
 
-              <div className="mt-3 flex flex-col md:flex-row md:items-start gap-4">
-                {/* QR image - shown when UPI selected */}
-                <div className="flex-shrink-0">
-                  {showProvidedQR ? (
-                    <img
-                      src={QR_IMAGE_URL}
-                      alt="UPI QR"
-                      className="w-48 h-48 object-contain rounded border"
-                      style={{ maxWidth: "320px" }}
-                    />
+              {/* layout: stacked for small/medium, row for XL */}
+              <div className="mt-3 flex flex-col xl:flex-row xl:items-start gap-4">
+                {/* LEFT: QR or Bank card or placeholder */}
+                <div className="flex-shrink-0 w-full xl:w-auto">
+                  {paymentMethod === "UPI" ? (
+                    <div className="mx-auto xl:mx-0 w-full max-w-[220px] xl:max-w-[320px]">
+                      <img
+                        src={QRCode}
+                        alt="UPI QR"
+                        className="w-full h-auto object-contain rounded border"
+                      />
+                    </div>
+                  ) : paymentMethod === "Net Banking" ? (
+                    <div className="w-full max-w-[320px] mx-auto xl:mx-0 bg-white rounded border p-4">
+                      <h5 className="font-semibold mb-2 text-sm">
+                        Bank Details
+                      </h5>
+
+                      <div className="text-sm text-gray-700 space-y-2">
+                        <div>
+                          <strong>Bank Name:</strong>{" "}
+                          {ORGANIZATION_BANK.bankName}
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                          <div>
+                            <strong>Account No.:</strong>{" "}
+                            {ORGANIZATION_BANK.accountNo}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                ORGANIZATION_BANK.accountNo
+                              );
+                              showAlert(
+                                "success",
+                                "Account number copied to clipboard."
+                              );
+                            }}
+                            className="mt-1 sm:mt-0 px-2 py-1 text-xs border rounded"
+                          >
+                            Copy
+                          </button>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                          <div>
+                            <strong>IFSC:</strong> {ORGANIZATION_BANK.ifsc}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                ORGANIZATION_BANK.ifsc
+                              );
+                              showAlert(
+                                "success",
+                                "IFSC code copied to clipboard."
+                              );
+                            }}
+                            className="mt-1 sm:mt-0 px-2 py-1 text-xs border rounded"
+                          >
+                            Copy
+                          </button>
+                        </div>
+
+                        <div>
+                          <strong>Branch:</strong> {ORGANIZATION_BANK.branch}
+                        </div>
+                      </div>
+                    </div>
                   ) : (
-                    <div className="w-48 h-48 bg-white rounded border flex items-center justify-center text-sm text-gray-500">
-                      {/* placeholder */}
-                      {paymentMethod === "Cash"
-                        ? "Cash payment (no QR)"
-                        : "Provide QR for UPI"}
+                    <div className="w-full max-w-[320px] mx-auto xl:mx-0 h-40 flex items-center justify-center bg-white rounded border text-sm text-gray-500">
+                      Cash payment (no QR)
                     </div>
                   )}
                 </div>
 
-                {/* small instructions on the right of QR on md+; stacked on mobile */}
+                {/* RIGHT: instructions / actions */}
                 <div className="flex-1">
                   <p className="text-sm text-gray-700 mb-2">
                     {paymentMethod === "UPI" ? (
@@ -494,9 +581,9 @@ const PaymentContent = () => {
                       </>
                     ) : paymentMethod === "Net Banking" ? (
                       <>
-                        Make net-banking transfer using bank details you have.
-                        Upload bank transaction screenshot and fill bank
-                        reference.
+                        Make net-banking transfer using the bank details shown
+                        on the left. Upload bank transaction screenshot and fill
+                        bank reference.
                       </>
                     ) : (
                       <>Receive cash and record PAN & receipt details.</>
@@ -510,19 +597,18 @@ const PaymentContent = () => {
                     )}
                     {paymentMethod === "Net Banking" && (
                       <li>
-                        Include bank name, branch & bank tx ref if available.
+                        Include bank tx ref & upload transaction screenshot.
                       </li>
                     )}
                     <li>Screenshot is stored and used for verification.</li>
                   </ul>
 
                   {/* Quick actions */}
-                  <div className="mt-3 flex gap-2">
-                    {showProvidedQR && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {paymentMethod === "UPI" && (
                       <button
                         onClick={() => {
-                          // open QR in new tab (for larger view)
-                          window.open(QR_IMAGE_URL, "_blank");
+                          window.open(QRCode, "_blank");
                         }}
                         className="px-3 py-1 rounded border text-sm"
                       >
@@ -546,12 +632,23 @@ const PaymentContent = () => {
               </div>
             </div>
 
-            {/* On small screens show the QR preview area below the form too */}
-            <div className="mt-4 md:mt-6">
+            {/* On small/medium screens show the QR/bank preview area below the form too */}
+            <div className="mt-4 xl:mt-6">
               <div className="text-xs text-gray-500">Preview / Notes</div>
               <div className="mt-2 text-sm text-gray-600">
-                Tip: For UPI keep the payer app ready, scan the QR, confirm
-                amount, then take a screenshot and upload.
+                {paymentMethod === "UPI" ? (
+                  <>
+                    Tip: For UPI keep the payer app ready, scan the QR, confirm
+                    amount, then take a screenshot and upload.
+                  </>
+                ) : paymentMethod === "Net Banking" ? (
+                  <>
+                    Tip: For Net Banking, confirm account & IFSC, then upload
+                    bank transaction screenshot and enter bank reference.
+                  </>
+                ) : (
+                  <>Tip: For cash payments, collect PAN & receipt details.</>
+                )}
               </div>
             </div>
           </div>
