@@ -1,8 +1,8 @@
 // create dataabase query
-CREATE DATABASE employetest;
+CREATE DATABASE ngo_little;
 
 // use database query
-use employetest;
+use ngo_little;
 
 // ------ Database Query for create table ------- //
 CREATE TABLE employee (
@@ -19,6 +19,8 @@ CREATE TABLE employee (
   status ENUM('active','inactive') DEFAULT 'active',
   user_profile VARCHAR(255),
   password VARCHAR(255) NOT NULL
+  created_at VARCHAR(255),
+  updated_at VARCHAR(255) DEFAULT NULL,
 );
 
 

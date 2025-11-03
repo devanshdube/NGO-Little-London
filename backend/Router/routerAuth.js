@@ -1,4 +1,7 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 const {
   register,
   login,
@@ -8,7 +11,22 @@ const {
 
 const router = express.Router();
 
-router.post("/register", register);
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
+
+router.post(
+  "/register",
+  upload.fields([{ name: "user_profile", maxCount: 1 }]),
+  register
+);
 router.post("/login", login);
 router.post("/forgotPassword", forgotPassword);
 router.post("/verifyOtpAndResetPassword", verifyOtpAndResetPassword);

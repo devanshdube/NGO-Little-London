@@ -1,5 +1,5 @@
 const { db } = require("./../connect");
-const cache = require("../config/cache");  
+const cache = require("../config/cache");
 
 exports.getEmployees = async (req, res) => {
   try {
@@ -65,8 +65,69 @@ exports.getEmployees = async (req, res) => {
 
       res.status(200).json({ status: "Success", data: results });
     });
-
   } catch (err) {
     res.status(500).json({ error: "Server error" });
+  }
+};
+
+exports.getPaymentTransactions = async (req, res) => {
+  try {
+    const query = "SELECT * FROM payment ORDER BY id DESC";
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred",
+          error: err.message,
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "Payment transactions fetched successfully",
+        count: results.length,
+        data: results,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+exports.getAllUser = async (req, res) => {
+  try {
+    const query = "SELECT * FROM employee ORDER BY id DESC";
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred",
+          error: err.message,
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "All User fetched successfully",
+        count: results.length,
+        data: results,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };

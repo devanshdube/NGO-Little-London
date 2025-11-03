@@ -4,6 +4,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const moment = require("moment-timezone");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 dotenv.config();
 
@@ -18,9 +22,15 @@ exports.register = async (req, res) => {
     aadhar,
     address,
     city,
-    user_profile,
     password,
   } = req.body;
+
+  const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+  const domain = process.env.domain;
+  const user_profile = req.files.user_profile
+    ? `${domain}/uploads/${req.files.user_profile[0].filename}`
+    : null;
 
   // Validation
   if (!name || !email || !designation || !password) {
@@ -55,8 +65,8 @@ exports.register = async (req, res) => {
         // Insert into employee table
         db.query(
           `INSERT INTO employee 
-          (name, f_name, mobile, email, designation, dob, aadhar, address, city, user_profile, password, status)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')`,
+          (name, f_name, mobile, email, designation, dob, aadhar, address, city, user_profile, password, status, created_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)`,
           [
             name,
             f_name || null,
@@ -69,6 +79,7 @@ exports.register = async (req, res) => {
             city || null,
             user_profile || null,
             hashedPassword,
+            createdAt,
           ],
           (err, result) => {
             if (err) {
