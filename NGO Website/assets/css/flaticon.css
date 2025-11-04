@@ -336,3 +336,21 @@
 .icon-quote:before {
   content: "\e946";
 }
+.icon-clipboard:before {
+  content: "\e93f";
+}
+.icon-handshake:before {
+  content: "\e918";
+}
+.icon-humanitarian:before {
+  content: "\e93a";
+}
+.icon-sparkle:before {
+  content: "\e92f";
+}
+.icon-team:before {
+  content: "\e937";
+}
+.icon-shield:before {
+  content: "\e929";
+}
