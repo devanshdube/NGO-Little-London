@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Edit, Trash2, UserPlus, Search, X } from "lucide-react";
 import InputField from "../../../Components/InputField";
 import axios from "axios";
+import AddUserModal from "./AddUserModal";
+import EditUserModal from "./EditUserModal";
 
 const API_URL = "http://localhost:5555/auth/api/ngo/get/getAllUser";
+const DELETE_URL_BASE = "http://localhost:5555/auth/api/ngo/login/deleteUser";
 const CHUNK_SIZE = 5;
 
 const UsersContent = () => {
@@ -16,13 +19,18 @@ const UsersContent = () => {
   const [dateFilter, setDateFilter] = useState("");
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
   const observerTarget = useRef(null);
   const filteredUsersRef = useRef([]);
   const displayedUsersRef = useRef([]);
 
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+
+  // NEW: edit modal state
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
 
   // fetchUsers stable with empty deps so useEffect won't loop
   const fetchUsers = useCallback(async () => {
@@ -144,13 +152,66 @@ const UsersContent = () => {
   const hasActiveFilters =
     searchTerm || roleFilter || statusFilter || dateFilter;
 
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+    setShowEditUserModal(true);
+  };
+
+  const handleDeleteUser = async (userId) => {
+    if (!userId) return;
+    const confirmed = window.confirm(
+      "Are you sure you want to DELETE this user? This action cannot be undone."
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(userId);
+
+      // Optimistic UI: remove from local lists immediately
+      setDisplayedUsers((prev) => prev.filter((u) => u.id !== userId));
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
+      setFilteredUsers((prev) => prev.filter((u) => u.id !== userId));
+      displayedUsersRef.current = displayedUsersRef.current.filter(
+        (u) => u.id !== userId
+      );
+      filteredUsersRef.current = filteredUsersRef.current.filter(
+        (u) => u.id !== userId
+      );
+
+      const url = `${DELETE_URL_BASE}/${userId}`;
+      const res = await axios.delete(url, { timeout: 15000 });
+
+      if (res?.data?.status === "Success") {
+        // success: optionally show a toast
+        // ensure hasMore flag correct
+        setHasMore(
+          displayedUsersRef.current.length < filteredUsersRef.current.length
+        );
+      } else {
+        throw new Error(res?.data?.message || "Delete failed");
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+      // revert by re-fetching server data
+      await fetchUsers();
+      alert(
+        err?.response?.data?.message || err.message || "Failed to delete user"
+      );
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <>
       <div className="bg-white rounded-lg shadow mb-6">
         <div className="p-4 border-b">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold text-gray-800">All Users</h3>
-            <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+            <button
+              onClick={() => setShowAddUserModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+            >
               <UserPlus size={20} />
               Add User
             </button>
@@ -203,6 +264,31 @@ const UsersContent = () => {
             </div>
           </div>
         </div>
+
+        {showAddUserModal && (
+          <AddUserModal
+            onClose={() => setShowAddUserModal(false)}
+            onUserAdded={() => {
+              setShowAddUserModal(false);
+              fetchUsers();
+            }}
+          />
+        )}
+
+        {showEditUserModal && editingUser && (
+          <EditUserModal
+            user={editingUser}
+            onClose={() => {
+              setShowEditUserModal(false);
+              setEditingUser(null);
+            }}
+            onUpdated={() => {
+              setShowEditUserModal(false);
+              setEditingUser(null);
+              fetchUsers();
+            }}
+          />
+        )}
 
         {/* Table */}
         <div
@@ -267,8 +353,20 @@ const UsersContent = () => {
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
-                      {user.designation}
+                    <span
+                      className={`px-2 py-1 rounded text-sm ${
+                        user.designation === "Admin"
+                          ? "bg-purple-100 text-purple-800"
+                          : user.designation === "Employee"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {user.designation === "Admin"
+                        ? "Admin"
+                        : user.designation === "Employee"
+                        ? "Team"
+                        : user.designation}
                     </span>
                   </td>
 
@@ -298,7 +396,11 @@ const UsersContent = () => {
                           : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {user.status}
+                      {user.status === "active"
+                        ? "Active"
+                        : user.status === "inactive"
+                        ? "Block"
+                        : user.status}
                     </span>
                   </td>
 
@@ -324,11 +426,42 @@ const UsersContent = () => {
 
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex gap-2">
-                      <button className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                      <button
+                        className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                        onClick={() => handleEditUser(user)} // <- open edit modal
+                      >
                         <Edit size={18} />
                       </button>
-                      <button className="p-1 text-red-600 hover:bg-red-50 rounded">
-                        <Trash2 size={18} />
+                      <button
+                        className="p-1 text-red-600 hover:bg-red-50 rounded flex items-center justify-center"
+                        onClick={() => handleDeleteUser(user.id)}
+                        disabled={deletingId === user.id}
+                        title="Delete user"
+                      >
+                        {deletingId === user.id ? (
+                          <svg
+                            className="animate-spin h-4 w-4 text-red-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v8z"
+                            ></path>
+                          </svg>
+                        ) : (
+                          <Trash2 size={18} />
+                        )}
                       </button>
                     </div>
                   </td>

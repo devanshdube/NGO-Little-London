@@ -25,6 +25,7 @@ import AnalyticsContent from "./Content/AnalyticsContent";
 import SignIn from "../Auth/SignIn";
 import PaymentContent from "./Content/PaymentContent";
 import PaymentHistory from "./Content/PaymentHistory";
+import Certificate from "./Content/Certificate";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -44,6 +45,7 @@ export default function Dashboard() {
     { id: "settings", label: "Settings", icon: Settings },
     { id: "payment", label: "Payment", icon: IndianRupee },
     { id: "payment-history", label: "Payment History", icon: CreditCard },
+    { id: "certificate", label: "certificate", icon: CreditCard },
   ];
 
   const renderContent = () => {
@@ -64,8 +66,8 @@ export default function Dashboard() {
         return <PaymentContent />;
       case "payment-history":
         return <PaymentHistory />;
-      case "login":
-        return <SignIn />;
+      case "certificate":
+        return <Certificate />;
       default:
         return <DashboardContent />;
     }
