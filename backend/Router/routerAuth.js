@@ -7,6 +7,8 @@ const {
   login,
   forgotPassword,
   verifyOtpAndResetPassword,
+  updateUser,
+  deleteUser,
 } = require("../Controller/controllerAuth");
 
 const router = express.Router();
@@ -20,7 +22,12 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+});
 
 router.post(
   "/register",
@@ -30,6 +37,8 @@ router.post(
 router.post("/login", login);
 router.post("/forgotPassword", forgotPassword);
 router.post("/verifyOtpAndResetPassword", verifyOtpAndResetPassword);
+router.put("/updateUser/:id", upload.single("user_profile"), updateUser);
+router.delete("/deleteUser/:id", deleteUser);
 
 module.exports = router;
 

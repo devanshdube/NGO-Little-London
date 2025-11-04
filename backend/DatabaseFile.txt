@@ -52,4 +52,13 @@ CREATE TABLE IF NOT EXISTS payment (
   INDEX idx_paymentMethod (paymentMethod)
 );
 
+CREATE TABLE project (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  file_name VARCHAR(512) NOT NULL,
+  created_at VARCHAR(255) NOT NULL,
+  updated_at VARCHAR(255) DEFAULT NULL
+);
+
+
 

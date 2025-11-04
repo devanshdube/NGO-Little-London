@@ -8,6 +8,8 @@ const moment = require("moment-timezone");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
+const unlinkAsync = util.promisify(fs.unlink);
 
 dotenv.config();
 
@@ -369,5 +371,262 @@ exports.verifyOtpAndResetPassword = async (req, res) => {
     return res
       .status(500)
       .json({ status: "Failure", message: "Internal server error" });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ status: "Failure", message: "User id is required in URL." });
+    }
+
+    const {
+      name,
+      f_name,
+      mobile,
+      email: rawEmail,
+      designation,
+      dob,
+      aadhar,
+      address,
+      city,
+      status,
+    } = req.body || {};
+
+    if (name && String(name).trim().length === 0) {
+      return res
+        .status(400)
+        .json({ status: "Failure", message: "Name cannot be empty." });
+    }
+
+    const email = rawEmail ? String(rawEmail).trim().toLowerCase() : undefined;
+
+    const allowedDesignations = ["Admin", "Employee"];
+    if (designation && !allowedDesignations.includes(designation)) {
+      return res.status(400).json({
+        status: "Failure",
+        message: "Invalid designation. Allowed: Admin, Employee.",
+      });
+    }
+
+    if (mobile) {
+      const onlyDigits = String(mobile).replace(/\D/g, "");
+      if (onlyDigits.length !== 10) {
+        return res.status(400).json({
+          status: "Failure",
+          message: "Mobile must be 10 digits long (numbers only).",
+        });
+      }
+    }
+
+    if (aadhar) {
+      const onlyDigits = String(aadhar).replace(/\D/g, "");
+      if (onlyDigits.length !== 12) {
+        return res.status(400).json({
+          status: "Failure",
+          message: "Aadhar must be 12 digits long (numbers only).",
+        });
+      }
+    }
+
+    const domain = process.env.domain || "";
+    let user_profile = null;
+    try {
+      if (req.files && req.files.user_profile) {
+        const arr = Array.isArray(req.files.user_profile)
+          ? req.files.user_profile
+          : [req.files.user_profile];
+        if (arr.length > 0 && arr[0].filename) {
+          user_profile = `${domain}/uploads/${arr[0].filename}`;
+        }
+      } else if (req.file && req.file.filename) {
+        user_profile = `${domain}/uploads/${req.file.filename}`;
+      }
+    } catch (fileErr) {
+      console.error("File parse warning:", fileErr);
+    }
+
+    const updates = [];
+    const params = [];
+
+    if (name !== undefined) {
+      updates.push("name = ?");
+      params.push(name);
+    }
+    if (f_name !== undefined) {
+      updates.push("f_name = ?");
+      params.push(f_name || null);
+    }
+    if (mobile !== undefined) {
+      updates.push("mobile = ?");
+      params.push(String(mobile).replace(/\D/g, ""));
+    }
+    if (email !== undefined) {
+      updates.push("email = ?");
+      params.push(email);
+    }
+    if (designation !== undefined) {
+      updates.push("designation = ?");
+      params.push(designation);
+    }
+    if (dob !== undefined) {
+      updates.push("dob = ?");
+      params.push(dob || null);
+    }
+    if (aadhar !== undefined) {
+      updates.push("aadhar = ?");
+      params.push(String(aadhar).replace(/\D/g, ""));
+    }
+    if (address !== undefined) {
+      updates.push("address = ?");
+      params.push(address || null);
+    }
+    if (city !== undefined) {
+      updates.push("city = ?");
+      params.push(city || null);
+    }
+    if (status !== undefined) {
+      updates.push("status = ?");
+      params.push(status);
+    }
+    if (user_profile) {
+      updates.push("user_profile = ?");
+      params.push(user_profile);
+    }
+
+    const updatedAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+    updates.push("updated_at = ?");
+    params.push(updatedAt);
+
+    if (updates.length === 0) {
+      return res
+        .status(400)
+        .json({ status: "Failure", message: "No fields provided to update." });
+    }
+
+    // push id for WHERE
+    params.push(id);
+
+    const sql = `UPDATE employee SET ${updates.join(", ")} WHERE id = ?`;
+
+    db.query(sql, params, (err, result) => {
+      if (err) {
+        console.error("DB update error:", err);
+        return res
+          .status(500)
+          .json({ status: "Failure", message: "Database error occurred." });
+      }
+
+      if (result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ status: "Failure", message: "User not found." });
+      }
+
+      return res
+        .status(200)
+        .json({ status: "Success", message: "User updated successfully." });
+    });
+  } catch (error) {
+    console.error("UpdateUser error:", error);
+    return res
+      .status(500)
+      .json({ status: "Failure", message: "Internal server error." });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id || isNaN(Number(id))) {
+      return res
+        .status(400)
+        .json({ status: "Failure", message: "Valid user id required in URL." });
+    }
+
+    // 1) Find user and get user_profile
+    const selectSql = "SELECT user_profile FROM employee WHERE id = ?";
+    db.query(selectSql, [id], async (selErr, selResults) => {
+      if (selErr) {
+        console.error("DB select error (deleteUser):", selErr);
+        return res
+          .status(500)
+          .json({ status: "Failure", message: "Database error." });
+      }
+
+      if (!selResults || selResults.length === 0) {
+        return res
+          .status(404)
+          .json({ status: "Failure", message: "User not found." });
+      }
+
+      const userProfile = selResults[0].user_profile; // may be null
+
+      // 2) If there is a stored file path, try to delete the file from uploads
+      if (userProfile) {
+        try {
+          // If user_profile is a full URL like https://domain/uploads/filename.jpg
+          // we try to extract the filename after '/uploads/'
+          let filename = null;
+
+          // Look for '/uploads/' in the URL/path and extract trailing part
+          const uploadsIndex = userProfile.indexOf("/uploads/");
+          if (uploadsIndex !== -1) {
+            filename = userProfile.slice(uploadsIndex + "/uploads/".length);
+          } else {
+            // fallback: last segment after slash
+            filename = path.basename(userProfile);
+          }
+
+          // Construct absolute path to uploads folder (adjust if your uploads folder is elsewhere)
+          const uploadsDir = path.join(__dirname, "..", "uploads"); // ../uploads relative to controller file
+          const filePath = path.join(uploadsDir, filename);
+
+          // Only attempt unlink if file exists
+          if (fs.existsSync(filePath)) {
+            await unlinkAsync(filePath);
+            console.log("Deleted file:", filePath);
+          } else {
+            console.warn("File to delete not found:", filePath);
+          }
+        } catch (fileErr) {
+          // Log warning but continue to delete DB row (don't block DB deletion due to file issues)
+          console.error(
+            "Warning: failed to remove user_profile file:",
+            fileErr
+          );
+        }
+      }
+
+      // 3) Delete the DB record (hard delete)
+      const deleteSql = "DELETE FROM employee WHERE id = ?";
+      db.query(deleteSql, [id], (delErr, delResult) => {
+        if (delErr) {
+          console.error("DB delete error:", delErr);
+          return res
+            .status(500)
+            .json({ status: "Failure", message: "Database error." });
+        }
+
+        if (delResult.affectedRows === 0) {
+          // unlikely because we selected earlier, but keep safe-check
+          return res
+            .status(404)
+            .json({ status: "Failure", message: "User not found." });
+        }
+
+        return res
+          .status(200)
+          .json({ status: "Success", message: "User deleted successfully." });
+      });
+    });
+  } catch (error) {
+    console.error("deleteUser error:", error);
+    return res
+      .status(500)
+      .json({ status: "Failure", message: "Internal server error." });
   }
 };
