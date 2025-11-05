@@ -274,7 +274,7 @@ ul {
   display: inline-block;
   font-size: 20px;
   line-height: 30px;
-  color: var(--givewell-primary);
+  color: #46b3b6;
   font-weight: 900;
   text-transform: capitalize;
   font-family: var(--givewell-font-three);

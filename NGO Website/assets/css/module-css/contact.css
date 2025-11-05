@@ -36,6 +36,7 @@
     position: relative;
     display: block;
     margin-right: -34px;
+    
 }
 
 .contact-one__left .section-title {
@@ -319,7 +320,7 @@
     position: relative;
     display: block;
     border-radius: 15px;
-    padding: 58px 55px 66px;
+    padding: 58px 40px 66px;
     background-color: var(--givewell-white);
     box-shadow: 0px 10px 60px 0px rgb(21, 21, 21, .15);
     margin-right: -34px;

@@ -348,9 +348,24 @@
 .icon-sparkle:before {
   content: "\e92f";
 }
-.icon-team:before {
-  content: "\e937";
-}
 .icon-shield:before {
   content: "\e929";
 }
+.icon-graduation:before {
+  content: "\e940";
+}
+.icon-female:before {
+  content: "\e945";
+}
+.icon-megaphone:before {
+  content: "\e930";
+}
+.icon-hands:before {
+  content: "\e950";
+}
+
+
+
+
+
+

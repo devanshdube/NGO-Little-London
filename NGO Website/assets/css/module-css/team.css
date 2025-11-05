@@ -136,7 +136,7 @@
     border-radius: 0px;
     transform: scale3d(1, 1, 1);
     transition: transform 1s ease-in-out;
-    mix-blend-mode: luminosity;
+    /* mix-blend-mode: luminosity; */
 }
 
 .team-one__single:hover .team-one__img img {
