@@ -131,3 +131,209 @@ exports.getAllUser = async (req, res) => {
     });
   }
 };
+
+exports.getAllProjects = async (req, res) => {
+  try {
+    const query = `
+      SELECT
+        p.id AS project_id,
+        p.title,
+        p.file_name,
+        p.created_at AS project_created_at,
+        p.updated_at AS project_updated_at,
+        pd.id AS detail_id,
+        pd.project_description,
+        pd.status,
+        pd.created_at AS detail_created_at,
+        pd.updated_at AS detail_updated_at
+      FROM project p
+      LEFT JOIN project_details pd ON p.id = pd.project_id
+      ORDER BY p.created_at DESC, pd.created_at ASC
+    `;
+
+    db.query(query, (err, rows) => {
+      if (err) {
+        console.error("DB query error:", err);
+        return res.status(500).json({ error: "Database query error" });
+      }
+
+      const projectsMap = new Map();
+      rows.forEach((r) => {
+        if (!projectsMap.has(r.project_id)) {
+          projectsMap.set(r.project_id, {
+            project_id: r.project_id,
+            title: r.title,
+            file_name: r.file_name || null,
+            created_at: r.project_created_at,
+            updated_at: r.project_updated_at,
+            details: [],
+          });
+        }
+
+        if (r.detail_id) {
+          projectsMap.get(r.project_id).details.push({
+            detail_id: r.detail_id,
+            project_description: r.project_description,
+            status: r.status,
+            created_at: r.detail_created_at,
+            updated_at: r.detail_updated_at,
+          });
+        }
+      });
+
+      const projects = Array.from(projectsMap.values());
+      return res.status(200).json({
+        status: "Success",
+        count: projects.length,
+        projects,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.getProjectById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ error: "project_id is required" });
+
+    const query = `
+      SELECT
+        p.id AS project_id,
+        p.title,
+        p.file_name,
+        p.created_at AS project_created_at,
+        p.updated_at AS project_updated_at,
+        pd.id AS detail_id,
+        pd.project_description,
+        pd.status,
+        pd.created_at AS detail_created_at,
+        pd.updated_at AS detail_updated_at
+      FROM project p
+      LEFT JOIN project_details pd ON p.id = pd.project_id
+      WHERE p.id = ?
+      ORDER BY pd.created_at ASC
+    `;
+
+    db.query(query, [id], (err, rows) => {
+      if (err) {
+        console.error("DB query error:", err);
+        return res.status(500).json({ error: "Database query error" });
+      }
+
+      if (!rows || rows.length === 0) {
+        return res
+          .status(404)
+          .json({ status: "Not Found", message: "Project not found" });
+      }
+
+      const first = rows[0];
+      const project = {
+        project_id: first.project_id,
+        title: first.title,
+        file_name: first.file_name || null,
+        created_at: first.project_created_at,
+        updated_at: first.project_updated_at,
+        details: [],
+      };
+
+      rows.forEach((r) => {
+        if (r.detail_id) {
+          project.details.push({
+            detail_id: r.detail_id,
+            project_description: r.project_description,
+            status: r.status,
+            created_at: r.detail_created_at,
+            updated_at: r.detail_updated_at,
+          });
+        }
+      });
+
+      return res.status(200).json({ status: "Success", project });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.getApprovedProjects = async (req, res) => {
+  try {
+    const query = `
+      SELECT
+        p.id AS project_id,
+        p.title,
+        p.file_name,
+        p.created_at AS project_created_at,
+        p.updated_at AS project_updated_at,
+        pd.id AS detail_id,
+        pd.project_description,
+        pd.status,
+        pd.created_at AS detail_created_at,
+        pd.updated_at AS detail_updated_at
+      FROM project p
+      INNER JOIN project_details pd 
+        ON p.id = pd.project_id 
+        AND pd.status = 'Approve'
+      ORDER BY p.created_at DESC, pd.created_at ASC
+    `;
+
+    db.query(query, (err, rows) => {
+      if (err) {
+        console.error("DB query error:", err);
+        return res.status(500).json({ error: "Database query error" });
+      }
+
+      const projectsMap = new Map();
+      rows.forEach((r) => {
+        if (!projectsMap.has(r.project_id)) {
+          projectsMap.set(r.project_id, {
+            project_id: r.project_id,
+            title: r.title,
+            file_name: r.file_name || null,
+            created_at: r.project_created_at,
+            updated_at: r.project_updated_at,
+            details: [],
+          });
+        }
+
+        projectsMap.get(r.project_id).details.push({
+          detail_id: r.detail_id,
+          project_description: r.project_description,
+          status: r.status,
+          created_at: r.detail_created_at,
+          updated_at: r.detail_updated_at,
+        });
+      });
+
+      const projects = Array.from(projectsMap.values());
+      return res.status(200).json({
+        status: "Success",
+        count: projects.length,
+        projects,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.getGalleryImages = (req, res) => {
+  const query = "SELECT * FROM gallery ORDER BY created_at DESC";
+  db.query(query, (err, rows) => {
+    if (err) {
+      console.error("DB gallery select error:", err);
+      return res
+        .status(500)
+        .json({ status: "Error", message: "Database error" });
+    }
+    return res.status(200).json({
+      status: "Success",
+      count: Array.isArray(rows) ? rows.length : 0,
+      images: rows || [],
+    });
+  });
+};
