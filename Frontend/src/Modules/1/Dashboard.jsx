@@ -12,6 +12,10 @@ import {
   ShieldCheck,
   IndianRupee,
   CreditCard,
+  Folder,
+  Award,
+  ClipboardList,
+  Images,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Redux/user/userSlice";
@@ -26,6 +30,9 @@ import SignIn from "../Auth/SignIn";
 import PaymentContent from "./Content/PaymentContent";
 import PaymentHistory from "./Content/PaymentHistory";
 import Certificate from "./Content/Certificate";
+import ProjectUploader from "./Content/ProjectUploader";
+import ProjectsContent from "./Content/ProjectsContent";
+import GalleryUploader from "./Content/GalleryUploader";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -38,14 +45,17 @@ export default function Dashboard() {
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: Home },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
+    // { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "users", label: "Users", icon: Users },
-    { id: "documents", label: "Documents", icon: FileText },
-    { id: "notifications", label: "Notifications", icon: Bell },
-    { id: "settings", label: "Settings", icon: Settings },
+    // { id: "documents", label: "Documents", icon: FileText },
+    // { id: "notifications", label: "Notifications", icon: Bell },
     { id: "payment", label: "Payment", icon: IndianRupee },
     { id: "payment-history", label: "Payment History", icon: CreditCard },
-    { id: "certificate", label: "certificate", icon: CreditCard },
+    { id: "certificate", label: "Certificate", icon: Award },
+    { id: "project", label: "Create Project", icon: Folder },
+    { id: "project-list", label: "Project List", icon: ClipboardList },
+    { id: "gallery", label: "Gallery", icon: Images },
+    // { id: "settings", label: "Settings", icon: Settings },
   ];
 
   const renderContent = () => {
@@ -60,14 +70,20 @@ export default function Dashboard() {
         return <DocumentsContent />;
       case "notifications":
         return <NotificationsContent />;
-      case "settings":
-        return <SettingsContent />;
+      // case "settings":
+      //   return <SettingsContent />;
       case "payment":
         return <PaymentContent />;
       case "payment-history":
         return <PaymentHistory />;
       case "certificate":
         return <Certificate />;
+      case "project":
+        return <ProjectUploader />;
+      case "project-list":
+        return <ProjectsContent />;
+      case "gallery":
+        return <GalleryUploader />;
       default:
         return <DashboardContent />;
     }

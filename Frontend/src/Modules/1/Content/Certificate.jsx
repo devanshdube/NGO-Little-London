@@ -1,12 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import imgCertificate from "./../../../assets/Apple 250.png";
 
 export default function Certificate({
-  recipientName = "Keerti Sharma",
+  // recipientName = {currentUser?.name || "User"},
   presidentName = "Keerti Sharma",
   viceName = "Pradeep Ingalkar",
   logo = imgCertificate,
 }) {
+  // const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.currentUser);
+
   //   return (
   //     <div className="min-h-screen bg-[#f6b13b] flex items-center justify-center p-6 box-border">
   //       <div
@@ -286,7 +290,7 @@ export default function Certificate({
                   className="text-[#0d2b5b] font-semibold"
                   style={{ fontSize: "clamp(20px, 3.6vw, 40px)" }}
                 >
-                  {recipientName}
+                  {currentUser?.name}
                 </div>
               </div>
 
