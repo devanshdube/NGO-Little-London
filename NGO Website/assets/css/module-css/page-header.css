@@ -111,3 +111,45 @@
 .thm-breadcrumb li:hover a {
     color: var(--givewell-base);
 }
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .page-header {
+        padding: 200px 0 120px;
+        margin-top: -100px;
+    }
+
+    .page-header__inner h2 {
+        font-size: 60px;
+        line-height: 60px;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .page-header {
+        padding: 180px 0 100px;
+        margin-top: -80px;
+    }
+
+    .page-header__bg {
+        background-position: center center;
+    }
+
+    .page-header__bg::before {
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+
+    .page-header__bg::after {
+        background-image: -moz-linear-gradient(-90deg, rgba(16, 16, 21, 0.6) 0%, rgba(16, 16, 21, 0) 80%);
+        background-image: -webkit-linear-gradient(-90deg, rgba(16, 16, 21, 0.6) 0%, rgba(16, 16, 21, 0) 80%);
+        background-image: -ms-linear-gradient(-90deg, rgba(16, 16, 21, 0.6) 0%, rgba(16, 16, 21, 0) 80%);
+    }
+
+    .page-header__inner h2 {
+        font-size: 48px;
+        line-height: 52px;
+    }
+
+    .thm-breadcrumb li {
+        font-size: 15px;
+    }
+}

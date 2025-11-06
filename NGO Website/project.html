@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title> Blog || givewell || givewell HTML 5 Template </title>
+  <title> Project || givewell || givewell HTML 5 Template </title>
   <!-- favicons Icons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png" />
@@ -188,12 +188,12 @@
       </div>
       <div class="container">
         <div class="page-header__inner">
-          <h2>Blog</h2>
+          <h2>Project</h2>
           <div class="thm-breadcrumb__box">
             <ul class="thm-breadcrumb list-unstyled">
               <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
               <li><span class="icon-right-arrow-1"></span></li>
-              <li>Blog</li>
+              <li>Project</li>
             </ul>
           </div>
         </div>
@@ -265,7 +265,7 @@
                     <ul class="footer-widget-three__links-list list-unstyled">
                       <li><a href="about.html">About Charity</a></li>
                       <li><a href="contact.html">Contact Us</a></li>
-                      <!-- <li><a href="blog.html">News & Updates</a></li> -->
+                      <!-- <li><a href="project.html">News & Updates</a></li> -->
                       <li><a href="Volunteers.html">Meet Our Volunteers</a></li>
                       <li><a href="gallery.html">Gallery</a></li>
                       <li><a href="#">Certification</a></li>
@@ -501,7 +501,7 @@
 
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-    fetch("http://localhost:5555/auth/api/website/getAllProjects")
+    fetch("https://ngo-admin.doaguru.com/auth/api/website/getAllProjects")
       .then(response => response.json())
       .then(data => {
         console.log(data); // For debugging
@@ -515,7 +515,7 @@
               ? project.file_name
               : "assets/images/default-project.jpg";
 
-            // ✅ blog-details.html me project_id ke sath link pass kiya gaya hai
+            // ✅ project-details.html me project_id ke sath link pass kiya gaya hai
             const projectHTML = `
               <li class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
                 <div class="blog-three__single">
@@ -523,7 +523,7 @@
                     <p><span class="icon-folder"></span>Project</p>
                   </div>
                   <h3 class="blog-three__title">
-                    <a href="blog-details.html?id=${project.project_id}">
+                    <a href="project-details.html?id=${project.project_id}">
                       ${project.title}
                     </a>
                   </h3>
@@ -534,7 +534,7 @@
                     <div class="blog-three__img">
                       <img src="${imageSrc}" alt="${project.title}">
                       <div class="blog-three__icon">
-                        <a href="blog-details.html?id=${project.project_id}">
+                        <a href="project-details.html?id=${project.project_id}">
                           <span class="icon-plus"></span>
                         </a>
                       </div>

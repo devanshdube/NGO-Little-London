@@ -12,16 +12,12 @@
 
 [class^="icon-"],
 [class*=" icon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
-  speak: never;
   font-style: normal;
-  font-weight: normal;
+  font-weight: normal;      
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-
-  /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -272,11 +268,16 @@
 .icon-minus:before {
   content: "\e936";
 }
+.icon-graduation:before {
+  content: "\e932";
+}
 
 .icon-team:before {
   content: "\e937";
 }
-
+.icon-handshake:before {
+  content: "\e936"; 
+}
 .icon-bonus:before {
   content: "\e938";
 }

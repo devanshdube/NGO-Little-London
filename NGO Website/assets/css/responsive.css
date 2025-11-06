@@ -536,14 +536,14 @@
         margin-top: 40px;
     }
 
-    .welcome-charity__carousel.owl-theme .owl-nav {
+    /* .welcome-charity__carousel.owl-theme .owl-nav {
         position: relative;
         bottom: 0;
         left: 0;
         right: 0;
         text-align: left;
         margin: 30px 0 0 !important;
-    }
+    } */
 
     .contact-one__contact-box {
         margin-left: 0;
@@ -687,7 +687,7 @@
 
 
 /* Tablet Layout: 768px. */
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
     .about-one__left {
         max-width: 600px;
         margin: 0 auto 0;
@@ -1043,14 +1043,14 @@
         margin-top: 40px;
     }
 
-    .welcome-charity__carousel.owl-theme .owl-nav {
+    /* .welcome-charity__carousel.owl-theme .owl-nav {
         position: relative;
         bottom: 0;
         left: 0;
         right: 0;
         text-align: left;
         margin: 30px 0 0 !important;
-    }
+    } */
 
     .contact-one__left {
         margin-right: 0;
@@ -1866,18 +1866,17 @@
         margin-top: 40px;
     }
 
-    .welcome-charity__carousel.owl-theme .owl-nav {
+    /* .welcome-charity__carousel.owl-theme .owl-nav {
         position: relative;
         bottom: 0;
         left: 0;
         right: 0;
         text-align: left;
         margin: 30px 0 0 !important;
-    }
+    } */
 
     .contact-one__left {
         margin-right: 0;
-        margin-left: 21rem;
     }
 
     .contact-one__contact-box {

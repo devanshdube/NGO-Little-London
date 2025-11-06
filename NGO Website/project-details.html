@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Blog Details || givewell || givewell HTML 5 Template </title>
+    <title> Project Details || givewell || givewell HTML 5 Template </title>
     <!-- favicons Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png" />
@@ -188,12 +188,12 @@
             </div>
             <div class="container">
                 <div class="page-header__inner">
-                    <h2>Blog Details</h2>
+                    <h2>Project Details</h2>
                     <div class="thm-breadcrumb__box">
                         <ul class="thm-breadcrumb list-unstyled">
                             <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
                             <li><span class="icon-right-arrow-1"></span></li>
-                            <li>Blog Details</li>
+                            <li>Project Details</li>
                         </ul>
                     </div>
                 </div>
@@ -311,7 +311,7 @@
                                                 on social media, organize community events</p>
                                             <span>February 03. 2025</span>
                                             <div class="comment-one__btn-box">
-                                                <a href="blog-details.html" class="comment-one__btn">reply</a>
+                                                <a href="project.html" class="comment-one__btn">reply</a>
                                             </div>
                                         </div>
                                     </div>
@@ -325,7 +325,7 @@
                                                 on social media, organize community events</p>
                                             <span>February 03. 2025</span>
                                             <div class="comment-one__btn-box">
-                                                <a href="blog-details.html" class="comment-one__btn">reply</a>
+                                                <a href="project.html" class="comment-one__btn">reply</a>
                                             </div>
                                         </div>
                                     </div>
@@ -409,7 +409,7 @@
                                             </div>
                                             <div class="sidebar__post-content">
                                                 <h3>
-                                                    <a href="blog-details.html">Unlocking Generosity: The Impact of Your
+                                                    <a href="project.html">Unlocking Generosity: The Impact of Your
                                                         Contributions</a>
                                                 </h3>
                                                 <p class="sidebar__post-date">04 March 2025</p>
@@ -421,7 +421,7 @@
                                             </div>
                                             <div class="sidebar__post-content">
                                                 <h3>
-                                                    <a href="blog-details.html">Compassion in Action: How You Can Make a
+                                                    <a href="project.html">Compassion in Action: How You Can Make a
                                                         Difference</a>
                                                 </h3>
                                                 <p class="sidebar__post-date">15 April 2025</p>
@@ -433,7 +433,7 @@
                                             </div>
                                             <div class="sidebar__post-content">
                                                 <h3>
-                                                    <a href="blog-details.html">From Local Global: The Ripple Effects of
+                                                    <a href="project.html">From Local Global: The Ripple Effects of
                                                         Charity</a>
                                                 </h3>
                                                 <p class="sidebar__post-date">05 June 2025</p>
@@ -750,7 +750,7 @@
     }
 
     // ✅ API call with ID
-    fetch(`http://localhost:5555/auth/api/website/getProjectById/${projectId}`)
+    fetch(`https://ngo-admin.doaguru.com/auth/api/website/getProjectById/${projectId}`)
       .then(response => response.json())
       .then(data => {
         const container = document.getElementById("project-content");
