@@ -103,7 +103,71 @@ exports.getPaymentTransactions = async (req, res) => {
 
 exports.getAllUser = async (req, res) => {
   try {
-    const query = "SELECT * FROM employee ORDER BY id DESC";
+    // const query = `SELECT * FROM employee WHERE designation = 'Employee' ORDER BY id DESC `;
+    const query = `SELECT * FROM employee ORDER BY id DESC `;
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred",
+          error: err.message,
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "All User fetched successfully",
+        count: results.length,
+        data: results,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+exports.getAllTeam = async (req, res) => {
+  try {
+    const query = `SELECT * FROM employee WHERE designation = 'Employee' ORDER BY id DESC `;
+    // const query = `SELECT * FROM employee ORDER BY id DESC `;
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred",
+          error: err.message,
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "All User fetched successfully",
+        count: results.length,
+        data: results,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+exports.getAllAdmin = async (req, res) => {
+  try {
+    const query = `SELECT * FROM employee WHERE designation = 'Admin' ORDER BY id DESC `;
 
     db.query(query, (err, results) => {
       if (err) {
@@ -336,4 +400,35 @@ exports.getGalleryImages = (req, res) => {
       images: rows || [],
     });
   });
+};
+
+exports.getAllQuerys = async (req, res) => {
+  try {
+    const query = `SELECT * FROM contact ORDER BY id DESC `;
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred",
+          error: err.message,
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "All Querys fetched successfully",
+        count: results.length,
+        data: results,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
 };

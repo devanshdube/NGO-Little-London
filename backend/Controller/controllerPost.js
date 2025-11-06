@@ -8,13 +8,15 @@ exports.postData = async (req, res) => {
   try {
     const { name, email, phone, subject, message } = req.body;
 
+    const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
     if (!name || !email || !phone || !subject || !message) {
       return res.status(400).json({ error: "All fields are required" });
     }
-    const values = [name, email, phone, subject, message];
+    const values = [name, email, phone, subject, message, createdAt];
 
     const query =
-      "INSERT INTO contact (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)";
+      "INSERT INTO contact (name, email, phone, subject, message, created_at) VALUES (?, ?, ?, ?, ?, ?)";
 
     db.query(query, values, (err, result) => {
       if (err) {

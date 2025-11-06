@@ -7,6 +7,7 @@ const postRouter = require("./Router/routerPost");
 const authRouter = require("./Router/routerAuth");
 const getRouter = require("./Router/routerGet");
 const deleteRouter = require("./Router/routerDelete");
+const websiteRouter = require("./Router/routerWebsite");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // app.use("/test", apiRouter);
 app.use("/auth/api/ngo/post", postRouter);
+app.use("/auth/api/website", websiteRouter);
 app.use("/auth/api/ngo/get", getRouter);
 // app.use("/auth/api/ngo/update", apiRouter);
 app.use("/auth/api/ngo/delete", deleteRouter);
