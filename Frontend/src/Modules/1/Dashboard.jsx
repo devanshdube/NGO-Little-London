@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Home,
   Users,
@@ -16,10 +16,11 @@ import {
   Award,
   ClipboardList,
   Images,
+  Phone,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Redux/user/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DashboardContent from "./Content/DashboardContent";
 import SettingsContent from "./Content/SettingsContent";
 import NotificationsContent from "./Content/NotificationsContent";
@@ -33,6 +34,7 @@ import Certificate from "./Content/Certificate";
 import ProjectUploader from "./Content/ProjectUploader";
 import ProjectsContent from "./Content/ProjectsContent";
 import GalleryUploader from "./Content/GalleryUploader";
+import ContactUsHistory from "./Content/ContactUsHistory";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -42,6 +44,20 @@ export default function Dashboard() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // example path: /admin/users  -> we want "users"
+    const parts = location.pathname.split("/").filter(Boolean); // ["admin","users"]
+    const sub = parts[1] ?? ""; // undefined => ""
+    if (!sub || sub === "") {
+      setActiveMenu("dashboard");
+    } else {
+      // map url segment to your menu ids (if you use different names adjust here)
+      // allow mapping like "project-list" etc. We'll use exact match.
+      setActiveMenu(sub);
+    }
+  }, [location.pathname]);
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: Home },
@@ -49,6 +65,7 @@ export default function Dashboard() {
     { id: "users", label: "Users", icon: Users },
     // { id: "documents", label: "Documents", icon: FileText },
     // { id: "notifications", label: "Notifications", icon: Bell },
+    { id: "Contact-History", label: "Contact-History", icon: Phone },
     { id: "payment", label: "Payment", icon: IndianRupee },
     { id: "payment-history", label: "Payment History", icon: CreditCard },
     { id: "certificate", label: "Certificate", icon: Award },
@@ -66,6 +83,8 @@ export default function Dashboard() {
         return <AnalyticsContent />;
       case "users":
         return <UsersContent />;
+      case "Contact-History":
+        return <ContactUsHistory />;
       case "documents":
         return <DocumentsContent />;
       case "notifications":
@@ -99,6 +118,15 @@ export default function Dashboard() {
       localStorage.removeItem("token");
       navigate("/signin");
     }, 1200); // Fake loading (1.2 sec)
+  };
+
+  // when user clicks a sidebar menu: navigate the URL AND set activeMenu
+  const onMenuClick = (id) => {
+    setActiveMenu(id);
+    // build path: dashboard -> /admin  ; others -> /admin/:id
+    const path = id === "dashboard" ? "/admin" : `/admin/${id}`;
+    // only push if different to avoid extra history entries
+    if (location.pathname !== path) navigate(path);
   };
 
   return (
@@ -135,7 +163,8 @@ export default function Dashboard() {
               return (
                 <li key={item.id}>
                   <button
-                    onClick={() => setActiveMenu(item.id)}
+                    // onClick={() => setActiveMenu(item.id)}
+                    onClick={() => onMenuClick(item.id)}
                     className={`w-full flex items-center gap-4 p-3 rounded-lg transition-all ${
                       activeMenu === item.id
                         ? "bg-[#805dca] shadow-lg"

@@ -1,17 +1,25 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
 import { UploadCloud, Trash2, X, ImageIcon } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout as logoutAction } from "./../../../Redux/user/userSlice";
 
 const API_UPLOAD =
-  "http://localhost:5555/auth/api/ngo/post/uploadGalleryImages";
-const API_GET = "http://localhost:5555/auth/api/ngo/get/getGalleryImages";
+  "https://ngo-admin.doaguru.com/auth/api/ngo/post/uploadGalleryImages";
+const API_GET =
+  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getGalleryImages";
 const API_DELETE =
-  "http://localhost:5555/auth/api/ngo/delete/deleteGalleryImage";
+  "https://ngo-admin.doaguru.com/auth/api/ngo/delete/deleteGalleryImage";
 
 const MAX_FILES = 20;
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 export default function GalleryUploader() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const reduxToken = useSelector((state) => state.user.token);
   // uploader state
   const [files, setFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -26,6 +34,28 @@ export default function GalleryUploader() {
   const [galleryError, setGalleryError] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
 
+  const getToken = () => reduxToken || localStorage.getItem("token");
+
+  const handleAuthError = (err) => {
+    const status = err?.response?.status;
+    if (status === 401) {
+      // token invalid/expired -> clear and redirect to signin
+      try {
+        dispatch(logoutAction());
+      } catch (e) {
+        /* ignore */
+        console.log(e);
+      }
+      try {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      } catch (e) {
+        console.log(e);
+      }
+      navigate("/signin", { replace: true });
+    }
+  };
+
   // cleanup object URLs on unmount
   useEffect(() => {
     return () =>
@@ -37,7 +67,19 @@ export default function GalleryUploader() {
     try {
       setLoadingGallery(true);
       setGalleryError(null);
-      const res = await axios.get(API_GET, { timeout: 15000 });
+
+      const token = getToken();
+      if (!token) {
+        // no token -> redirect to signin
+        dispatch(logoutAction());
+        localStorage.removeItem("token");
+        navigate("/signin", { replace: true });
+        return;
+      }
+
+      const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+
+      const res = await axios.get(API_GET, { ...authHeader, timeout: 15000 });
       if (res?.data?.status === "Success") {
         setImages(Array.isArray(res.data.images) ? res.data.images : []);
       } else {
@@ -46,6 +88,7 @@ export default function GalleryUploader() {
       }
     } catch (err) {
       console.error("Fetch gallery error:", err);
+      handleAuthError(err);
       setGalleryError(err?.message || "Network error");
       setImages([]);
     } finally {

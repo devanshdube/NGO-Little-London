@@ -39,32 +39,48 @@ const SignIn = () => {
     try {
       setLoading(true);
 
-      // 👇 Update this URL according to your backend
       const response = await axios.post(
-        "http://localhost:5555/auth/api/ngo/login/login",
+        "https://ngo-admin.doaguru.com/auth/api/ngo/login/login",
         formData
       );
 
-      if (response.data.status === "Success") {
-        const { user, token } = response.data; // ✅ Expecting {status, user, token}
+      if (response.data?.status === "Success") {
+        const { user, token } = response.data;
 
-        // ✅ Store in Redux
+        // Save token to localStorage first (so any immediate subsequent code can read it)
+        try {
+          localStorage.setItem("token", token);
+          // Optional: store minimal user info only
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              id: user.id,
+              name: user.name,
+              designation: user.designation,
+            })
+          );
+        } catch (err) {
+          console.warn("Could not save token to localStorage", err);
+        }
+
+        // Store in Redux
         dispatch(setUser({ user, token }));
 
-        // ✅ Show success alert
+        // Success alert
         setAlert({ type: "success", message: `Welcome ${user.name}!` });
 
-        // ✅ Redirect after short delay
+        // Navigate — use replace to avoid keeping signin in history
         setTimeout(() => {
-          if (user.designation?.toLowerCase() === "admin") navigate("/admin");
+          if (user.designation?.toLowerCase() === "admin")
+            navigate("/admin", { replace: true });
           else if (user.designation?.toLowerCase() === "employee")
-            navigate("/employee");
-          else navigate("/");
-        }, 1500);
+            navigate("/employee", { replace: true });
+          else navigate("/", { replace: true });
+        }, 900); // slightly shorter delay is often nicer
       } else {
         setAlert({
           type: "error",
-          message: response.data.message || "Login failed.",
+          message: response.data?.message || "Login failed.",
         });
       }
     } catch (error) {
@@ -78,6 +94,53 @@ const SignIn = () => {
       setLoading(false);
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!validateForm()) return;
+
+  //   try {
+  //     setLoading(true);
+
+  //     // 👇 Update this URL according to your backend
+  //     const response = await axios.post(
+  //       "https://ngo-admin.doaguru.com/auth/api/ngo/login/login",
+  //       formData
+  //     );
+
+  //     if (response.data.status === "Success") {
+  //       const { user, token } = response.data; // ✅ Expecting {status, user, token}
+
+  //       // ✅ Store in Redux
+  //       dispatch(setUser({ user, token }));
+
+  //       // ✅ Show success alert
+  //       setAlert({ type: "success", message: `Welcome ${user.name}!` });
+
+  //       // ✅ Redirect after short delay
+  //       setTimeout(() => {
+  //         if (user.designation?.toLowerCase() === "admin") navigate("/admin");
+  //         else if (user.designation?.toLowerCase() === "employee")
+  //           navigate("/employee");
+  //         else navigate("/");
+  //       }, 1500);
+  //     } else {
+  //       setAlert({
+  //         type: "error",
+  //         message: response.data.message || "Login failed.",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     setAlert({
+  //       type: "error",
+  //       message:
+  //         error.response?.data?.message ||
+  //         "Something went wrong. Please try again.",
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div

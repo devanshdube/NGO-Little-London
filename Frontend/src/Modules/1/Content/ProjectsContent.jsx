@@ -2,13 +2,20 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Search, X, Eye, Edit, Trash2 } from "lucide-react";
 import InputField from "../../../Components/InputField";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout as logoutAction } from "./../../../Redux/user/userSlice";
 
-const API_URL = "http://localhost:5555/auth/api/ngo/get/getAllProjects";
+const API_URL = "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllProjects";
 const DELETE_PROJECT_URL_BASE =
-  "http://localhost:5555/auth/api/ngo/delete/deleteProject";
+  "https://ngo-admin.doaguru.com/auth/api/ngo/delete/deleteProject";
 const CHUNK_SIZE = 5;
 
 const ProjectsContent = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const reduxToken = useSelector((state) => state.user.token);
   // data state
   const [projects, setProjects] = useState([]);
   const [displayedProjects, setDisplayedProjects] = useState([]);
@@ -39,12 +46,46 @@ const ProjectsContent = () => {
 
   const [deletingId, setDeletingId] = useState(null);
 
+  const getToken = () => reduxToken || localStorage.getItem("token");
+
+  const handleAuthError = (err) => {
+    const status = err?.response?.status;
+    if (status === 401) {
+      // token invalid/expired -> clear and redirect to signin
+      try {
+        dispatch(logoutAction());
+      } catch (e) {
+        /* ignore */
+        console.log(e);
+      }
+      try {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      } catch (e) {
+        console.log(e);
+      }
+      navigate("/signin", { replace: true });
+    }
+  };
+
   // fetch projects
   const fetchProjects = useCallback(async () => {
     try {
       setIsFetching(true);
       setError(null);
-      const res = await axios.get(API_URL, { timeout: 15000 });
+
+      const token = getToken();
+      if (!token) {
+        // no token -> redirect to signin
+        dispatch(logoutAction());
+        localStorage.removeItem("token");
+        navigate("/signin", { replace: true });
+        return;
+      }
+
+      const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+
+      const res = await axios.get(API_URL, { ...authHeader, timeout: 15000 });
       // expecting { status: "Success", count, projects: [...] }
       if (res?.data?.status === "Success" && Array.isArray(res.data.projects)) {
         // map projects to ensure fields we use exist & create createdDate (yyyy-mm-dd)
@@ -61,6 +102,7 @@ const ProjectsContent = () => {
       }
     } catch (err) {
       console.error("Fetch error:", err);
+      handleAuthError(err);
       setError(err?.response?.data?.message || err.message || "Network error");
       setProjects([]);
     } finally {
@@ -297,7 +339,7 @@ const ProjectsContent = () => {
       );
 
       // call backend
-      const url = `http://localhost:5555/auth/api/ngo/delete/deleteProjectDetail/${detailId}`;
+      const url = `https://ngo-admin.doaguru.com/auth/api/ngo/delete/deleteProjectDetail/${detailId}`;
       const res = await axios.delete(url, { timeout: 15000 });
 
       if (!(res?.data?.status === "Success")) {
@@ -656,20 +698,20 @@ const ProjectsContent = () => {
                   <div className="text-sm text-gray-600">
                     Created: {activeProject.createdDate}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  {/* <div className="text-sm text-gray-600">
                     Updated: {activeProject.updatedDate || "-"}
-                  </div>
+                  </div> */}
                   <div className="text-sm text-gray-600 mt-2">
                     Details: {activeProject.details.length}
                   </div>
-                  <div className="text-sm text-emerald-700 mt-1">
+                  {/* <div className="text-sm text-emerald-700 mt-1">
                     Approved:{" "}
                     {
                       activeProject.details.filter(
                         (d) => d.status === "Approve"
                       ).length
                     }
-                  </div>
+                  </div> */}
                 </div>
               </div>
 

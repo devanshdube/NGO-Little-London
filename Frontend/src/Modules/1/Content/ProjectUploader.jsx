@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const POST_PROJECT_URL = "http://localhost:5555/auth/api/ngo/post/postProject";
+const POST_PROJECT_URL =
+  "https://ngo-admin.doaguru.com/auth/api/ngo/post/postProject";
 const POST_PROJECT_DETAILS_URL =
-  "http://localhost:5555/auth/api/ngo/post/postProjectDetails";
+  "https://ngo-admin.doaguru.com/auth/api/ngo/post/postProjectDetails";
 
 export default function ProjectUploader() {
   // Form 1 - project

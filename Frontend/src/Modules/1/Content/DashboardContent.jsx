@@ -1,37 +1,26 @@
+// Content/DashboardContent.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Users, BarChart3, FileText, ImageIcon } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout as logoutAction } from "./../../../Redux/user/userSlice";
 
-/**
- * DashboardContent
- *
- * - Shows greeting based on time in Asia/Kolkata
- * - Shows date & day
- * - Fetches counts for Users, Payments, Projects, Gallery
- *
- * APIs used (attempted):
- *  - Users:    /auth/api/ngo/get/getAllUser       (expects res.data.data = array)
- *  - Payments: /auth/api/ngo/get/getAllPayments   (if not present, handled gracefully)
- *  - Projects: /auth/api/ngo/get/getAllProjects   (expects res.data.projects = array)
- *  - Gallery:  /auth/api/ngo/get/getGalleryImages (expects res.data.images = array)
- *
- * If your actual endpoints differ, update the constants below.
- */
-
-const API_USERS = "http://localhost:5555/auth/api/ngo/get/getAllUser";
-const API_PAYMENTS = "http://localhost:5555/auth/api/ngo/get/getAllPayments"; // might not exist — handled
-const API_PROJECTS = "http://localhost:5555/auth/api/ngo/get/getAllProjects";
-const API_GALLERY = "http://localhost:5555/auth/api/ngo/get/getGalleryImages";
+const API_USERS = "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllUser";
+const API_PAYMENTS =
+  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getPaymentTransactions";
+const API_PROJECTS =
+  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllProjects";
+const API_GALLERY =
+  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getGalleryImages";
+const API_ADMINS = "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllAdmin";
 
 function useKolkataDate() {
-  // Returns { dateStr: 'Wednesday, Nov 5, 2025', timeStr: '10:34 AM', hour: 10 }
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 60 * 1000); // update each minute
+    const t = setInterval(() => setNow(new Date()), 60 * 1000);
     return () => clearInterval(t);
   }, []);
-
-  // format in Asia/Kolkata timezone
   const optsDate = {
     weekday: "long",
     month: "short",
@@ -46,19 +35,22 @@ function useKolkataDate() {
     timeZone: "Asia/Kolkata",
   };
   const optsHour = { hour: "2-digit", hour12: false, timeZone: "Asia/Kolkata" };
-
   const dateStr = new Intl.DateTimeFormat("en-GB", optsDate).format(now);
   const timeStr = new Intl.DateTimeFormat("en-US", optsTime).format(now);
-  const hourStr = new Intl.DateTimeFormat("en-GB", optsHour).format(now); // "00"-"23"
+  const hourStr = new Intl.DateTimeFormat("en-GB", optsHour).format(now);
   const hour = Number(hourStr);
-
   return { dateStr, timeStr, hour };
 }
 
 export default function DashboardContent() {
   const { dateStr, timeStr, hour } = useKolkataDate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // greeting logic
+  // Prefer token from Redux (persisted), fallback to localStorage
+  const reduxToken = useSelector((state) => state.user.token);
+  const currentUser = useSelector((state) => state.user.currentUser);
+
   const greeting = useMemo(() => {
     if (hour >= 5 && hour < 12) return "Good Morning";
     if (hour >= 12 && hour < 17) return "Good Afternoon";
@@ -66,15 +58,8 @@ export default function DashboardContent() {
     return "Hello";
   }, [hour]);
 
-  const nameFromStorage =
-    typeof window !== "undefined"
-      ? localStorage.getItem("userName") ||
-        localStorage.getItem("name") ||
-        "User"
-      : "User";
-  const displayName = nameFromStorage;
+  const displayName = currentUser?.name ?? "User";
 
-  // stats state
   const [loading, setLoading] = useState(true);
   const [counts, setCounts] = useState({
     users: null,
@@ -89,33 +74,93 @@ export default function DashboardContent() {
     gallery: null,
   });
 
+  // admins state
+  const [admins, setAdmins] = useState([]);
+  const [adminsError, setAdminsError] = useState(null);
+
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
 
-    // fetch all endpoints concurrently and handle missing endpoints gracefully
+    // decide token: redux first, then localStorage
+    const token = reduxToken || localStorage.getItem("token");
+
+    // if no token, force sign-in
+    if (!token) {
+      try {
+        dispatch(logoutAction());
+      } catch (e) {
+        console.log(e);
+      }
+      localStorage.removeItem("token");
+      navigate("/signin", { replace: true });
+      return () => {};
+    }
+
+    const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+
+    const handleAuthError = (err) => {
+      const status = err?.response?.status;
+      if (status === 401) {
+        // session expired or invalid token
+        try {
+          dispatch(logoutAction());
+        } catch (e) {
+          console.log(e);
+        }
+        localStorage.removeItem("token");
+        navigate("/signin", { replace: true });
+      }
+    };
+
+    // fetch all required endpoints (including admins)
     const calls = [
       axios
-        .get(API_USERS)
+        .get(API_USERS, authHeader)
         .then((r) => ({ key: "users", ok: true, res: r }))
-        .catch((e) => ({ key: "users", ok: false, err: e })),
+        .catch((e) => {
+          handleAuthError(e);
+          return { key: "users", ok: false, err: e };
+        }),
+
       axios
-        .get(API_PAYMENTS)
+        .get(API_PAYMENTS, authHeader)
         .then((r) => ({ key: "payments", ok: true, res: r }))
-        .catch((e) => ({ key: "payments", ok: false, err: e })),
+        .catch((e) => {
+          handleAuthError(e);
+          return { key: "payments", ok: false, err: e };
+        }),
+
       axios
-        .get(API_PROJECTS)
+        .get(API_PROJECTS, authHeader)
         .then((r) => ({ key: "projects", ok: true, res: r }))
-        .catch((e) => ({ key: "projects", ok: false, err: e })),
+        .catch((e) => {
+          handleAuthError(e);
+          return { key: "projects", ok: false, err: e };
+        }),
+
       axios
-        .get(API_GALLERY)
+        .get(API_GALLERY, authHeader)
         .then((r) => ({ key: "gallery", ok: true, res: r }))
-        .catch((e) => ({ key: "gallery", ok: false, err: e })),
+        .catch((e) => {
+          handleAuthError(e);
+          return { key: "gallery", ok: false, err: e };
+        }),
+
+      // NEW: admins
+      axios
+        .get(API_ADMINS, authHeader)
+        .then((r) => ({ key: "admins", ok: true, res: r }))
+        .catch((e) => {
+          handleAuthError(e);
+          return { key: "admins", ok: false, err: e };
+        }),
     ];
 
     Promise.all(calls)
       .then((results) => {
         if (!isMounted) return;
+
         const nextCounts = {
           users: null,
           payments: null,
@@ -129,22 +174,26 @@ export default function DashboardContent() {
           gallery: null,
         };
 
+        let nextAdmins = [];
+        let nextAdminsError = null;
+
         results.forEach((r) => {
           if (!r) return;
           const k = r.key;
           if (!r.ok) {
-            // handle error: set readable message
             const msg =
               r.err?.response?.data?.message || r.err?.message || "Failed";
-            nextErrors[k] = msg;
-            nextCounts[k] = null;
+            if (k === "admins") {
+              nextAdminsError = msg;
+            } else {
+              nextErrors[k] = msg;
+              nextCounts[k] = null;
+            }
             return;
           }
 
           const data = r.res?.data;
-          // map different API shapes:
           if (k === "users") {
-            // try common shapes: { status: "Success", data: [...] } or { users: [...] }
             const arr = Array.isArray(data?.data)
               ? data.data
               : Array.isArray(data?.users)
@@ -158,7 +207,6 @@ export default function DashboardContent() {
             if (nextCounts.users === null)
               nextErrors.users = "Unexpected response";
           } else if (k === "payments") {
-            // payments may return array or count
             const arrP = Array.isArray(data?.data)
               ? data.data
               : Array.isArray(data?.payments)
@@ -197,14 +245,29 @@ export default function DashboardContent() {
               : null;
             if (nextCounts.gallery === null)
               nextErrors.gallery = "Unexpected response";
+          } else if (k === "admins") {
+            // expecting { status: "Success", data: [...] } or similar
+            const arrA = Array.isArray(data?.data)
+              ? data.data
+              : Array.isArray(data?.admins)
+              ? data.admins
+              : null;
+            if (Array.isArray(arrA)) {
+              nextAdmins = arrA;
+            } else if (typeof data?.count === "number" && data?.count === 0) {
+              nextAdmins = [];
+            } else {
+              nextAdminsError = "Unexpected admins response";
+            }
           }
         });
 
         setCounts(nextCounts);
         setErrors(nextErrors);
+        setAdmins(nextAdmins);
+        setAdminsError(nextAdminsError);
       })
       .catch((e) => {
-        // should not happen due to per-call catches, but safe fallback
         console.error("Fetch dashboard data error:", e);
       })
       .finally(() => {
@@ -214,9 +277,8 @@ export default function DashboardContent() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [reduxToken, dispatch, navigate]);
 
-  // small helper to render card
   const StatCard = ({
     title,
     value,
@@ -258,6 +320,11 @@ export default function DashboardContent() {
     </div>
   );
 
+  const to = (subpath) => {
+    if (subpath === "" || subpath === "/") return navigate("/admin");
+    return navigate(`/admin/${subpath}`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -284,7 +351,7 @@ export default function DashboardContent() {
           </div>
           <div>
             <button
-              onClick={() => (window.location.href = "/dashboard")}
+              onClick={() => to("")}
               className="px-3 py-2 bg-gray-100 text-gray-700 rounded"
             >
               Dashboard
@@ -303,9 +370,8 @@ export default function DashboardContent() {
           hint={
             errors.users ? `Error: ${errors.users}` : "Total registered users"
           }
-          onView={() => (window.location.href = "/users")}
+          onView={() => to("users")}
         />
-
         <StatCard
           title="Payments"
           value={counts.payments}
@@ -316,9 +382,8 @@ export default function DashboardContent() {
               ? `Error: ${errors.payments}`
               : "Total recorded payments"
           }
-          onView={() => (window.location.href = "/payments")}
+          onView={() => to("payment")}
         />
-
         <StatCard
           title="Projects"
           value={counts.projects}
@@ -329,71 +394,74 @@ export default function DashboardContent() {
               ? `Error: ${errors.projects}`
               : "Active projects & entries"
           }
-          onView={() => (window.location.href = "/projects")}
+          onView={() => to("project-list")}
         />
-
         <StatCard
           title="Gallery"
           value={counts.gallery}
           icon={<ImageIcon size={20} />}
           colorClass="bg-rose-100 text-rose-600"
           hint={errors.gallery ? `Error: ${errors.gallery}` : "Uploaded images"}
-          onView={() => (window.location.href = "/gallery")}
+          onView={() => to("gallery")}
         />
       </div>
 
-      {/* Recent Activity (kept simple) */}
+      {/* All Admins (replaces Recent Activity) */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Recent Activity
-        </h3>
-
-        {/* If you have an activity API, you can fetch and map here.
-            For now we show lightweight placeholders. */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded">
-            <div className="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-semibold">
-              U
-            </div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-800">
-                New user registered
-              </div>
-              <div className="text-xs text-gray-500">
-                John Doe — 20 minutes ago
-              </div>
-            </div>
-            <div className="text-xs text-gray-400">Now</div>
-          </div>
-
-          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded">
-            <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white font-semibold">
-              P
-            </div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-800">
-                Payment received
-              </div>
-              <div className="text-xs text-gray-500">
-                ₹2,500 — Invoice #452 — 2 hours ago
-              </div>
-            </div>
-            <div className="text-xs text-gray-400">2h</div>
-          </div>
-
-          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded">
-            <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
-              G
-            </div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-800">
-                3 images uploaded to gallery
-              </div>
-              <div className="text-xs text-gray-500">Today</div>
-            </div>
-            <div className="text-xs text-gray-400">4h</div>
-          </div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">All Admins</h3>
+          <div className="text-sm text-gray-500">{admins.length} admins</div>
         </div>
+
+        {loading && admins.length === 0 ? (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          </div>
+        ) : adminsError ? (
+          <div className="text-sm text-red-600">{adminsError}</div>
+        ) : admins.length === 0 ? (
+          <div className="text-sm text-gray-500">No admins found.</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {admins.map((a) => (
+              <div
+                key={a.id || a.email}
+                className="p-3 bg-gray-50 rounded flex items-center gap-4"
+              >
+                <div className="w-12 h-12 rounded-full bg-indigo-500 flex items-center justify-center text-white font-semibold text-lg">
+                  {a.name ? a.name.charAt(0).toUpperCase() : "A"}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-gray-800">
+                        {a.name || a.fullname || "Admin"}
+                      </div>
+                      <div className="text-xs text-gray-500">{a.email}</div>
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      {a.designation || "Admin"}
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center gap-3 text-xs text-gray-600">
+                    {a.mobile && <div>📞 {a.mobile}</div>}
+                    {a.status && (
+                      <div
+                        className={
+                          String(a.status).toLowerCase() === "active"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }
+                      >
+                        {a.status}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

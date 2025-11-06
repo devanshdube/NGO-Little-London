@@ -4,12 +4,21 @@ import InputField from "../../../Components/InputField";
 import axios from "axios";
 import AddUserModal from "./AddUserModal";
 import EditUserModal from "./EditUserModal";
+import { useSelector, useDispatch } from "react-redux";
+import { logout as logoutAction } from "./../../../Redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
-const API_URL = "http://localhost:5555/auth/api/ngo/get/getAllUser";
-const DELETE_URL_BASE = "http://localhost:5555/auth/api/ngo/login/deleteUser";
+const API_URL = "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllUser";
+const DELETE_URL_BASE =
+  "https://ngo-admin.doaguru.com/auth/api/ngo/login/deleteUser";
 const CHUNK_SIZE = 5;
 
 const UsersContent = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const reduxToken = useSelector((state) => state.user.token);
+
   const [users, setUsers] = useState([]);
   const [displayedUsers, setDisplayedUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -32,31 +41,114 @@ const UsersContent = () => {
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
 
-  // fetchUsers stable with empty deps so useEffect won't loop
+  const getToken = () => reduxToken || localStorage.getItem("token");
+
+  const handleAuthError = (err) => {
+    const status = err?.response?.status;
+    if (status === 401) {
+      // token invalid/expired -> clear and redirect to signin
+      try {
+        dispatch(logoutAction());
+      } catch (e) {
+        /* ignore */
+        console.log(e);
+      }
+      try {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      } catch (e) {
+        console.log(e);
+      }
+      navigate("/signin", { replace: true });
+    }
+  };
+
   const fetchUsers = useCallback(async () => {
     try {
       setIsFetching(true);
       setError(null);
-      const res = await axios.get(API_URL, { timeout: 15000 });
+
+      const token = getToken();
+      if (!token) {
+        // no token -> redirect to signin
+        dispatch(logoutAction());
+        localStorage.removeItem("token");
+        navigate("/signin", { replace: true });
+        return;
+      }
+
+      const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+
+      const res = await axios.get(API_URL, { ...authHeader, timeout: 15000 });
+
       if (res?.data?.status === "Success" && Array.isArray(res.data.data)) {
         const getAllUsers = res.data.data.map((p) => ({
           ...p,
-          // ensure createdDate is just yyyy-mm-dd for easier filtering
+          // ensure createdDate is yyyy-mm-dd for easier filtering
           createdDate: p.created_at ? p.created_at.slice(0, 10) : null,
         }));
         setUsers(getAllUsers);
+
+        // initialize filtered/displayed helpers
+        filteredUsersRef.current = getAllUsers;
+        displayedUsersRef.current = getAllUsers.slice(0, CHUNK_SIZE);
+        setFilteredUsers(getAllUsers);
+        setDisplayedUsers(getAllUsers.slice(0, CHUNK_SIZE));
+        setHasMore(getAllUsers.length > CHUNK_SIZE);
       } else {
         setError("API returned unexpected data.");
         setUsers([]);
+        setFilteredUsers([]);
+        setDisplayedUsers([]);
+        setHasMore(false);
       }
     } catch (err) {
       console.error("Fetch error:", err);
+      handleAuthError(err);
       setError(err?.response?.data?.message || err.message || "Network error");
       setUsers([]);
+      setFilteredUsers([]);
+      setDisplayedUsers([]);
+      setHasMore(false);
     } finally {
       setIsFetching(false);
     }
-  }, []); // <-- important: stable function
+  }, [dispatch, navigate, reduxToken]);
+
+  // const fetchUsers = useCallback(async () => {
+  //   try {
+  //     setIsFetching(true);
+  //     setError(null);
+
+  //     const token = getToken();
+  //     if (!token) {
+  //       dispatch(logoutAction());
+  //       localStorage.removeItem("token");
+  //       navigate("/signin", { replace: true });
+  //       return;
+  //     }
+
+  //     const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+
+  //     const res = await axios.get(API_URL, { ...authHeader, timeout: 15000 });
+  //     if (res?.data?.status === "Success" && Array.isArray(res.data.data)) {
+  //       const getAllUsers = res.data.data.map((p) => ({
+  //         ...p,
+  //         createdDate: p.created_at ? p.created_at.slice(0, 10) : null,
+  //       }));
+  //       setUsers(getAllUsers);
+  //     } else {
+  //       setError("API returned unexpected data.");
+  //       setUsers([]);
+  //     }
+  //   } catch (err) {
+  //     console.error("Fetch error:", err);
+  //     setError(err?.response?.data?.message || err.message || "Network error");
+  //     setUsers([]);
+  //   } finally {
+  //     setIsFetching(false);
+  //   }
+  // }, []);
 
   useEffect(() => {
     fetchUsers();
