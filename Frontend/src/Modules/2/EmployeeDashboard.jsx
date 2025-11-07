@@ -1,57 +1,103 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Home,
   Users,
-  Settings,
-  BarChart3,
-  FileText,
+  User2,
   Bell,
   Search,
   ChevronsLeft,
   ChevronsRight,
   ShieldCheck,
+  IndianRupee,
+  CreditCard,
+  Folder,
+  Award,
+  ClipboardList,
+  Images,
+  Phone,
 } from "lucide-react";
-import DashboardContent from "../1/Content/DashboardContent";
-import AnalyticsContent from "../1/Content/AnalyticsContent";
-import UsersContent from "../1/Content/UsersContent";
-import DocumentsContent from "../1/Content/DocumentsContent";
-import NotificationsContent from "../1/Content/NotificationsContent";
-import SettingsContent from "../1/Content/SettingsContent";
-import SignIn from "../Auth/SignIn";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../Redux/user/userSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import DashboardContent from "./Content/DashboardContent";
+import PaymentContent from "./Content/PaymentContent";
+import PaymentHistory from "./Content/PaymentHistory";
+import Certificate from "./Content/Certificate";
+import ProjectUploader from "./Content/ProjectUploader";
+import ProjectsContent from "./Content/ProjectsContent";
+import GalleryUploader from "./Content/GalleryUploader";
+import UpdateUserProfile from "./Content/UpdateUserProfile";
 
 export default function EmployeeDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeMenu, setActiveMenu] = useState("dashboard");
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const sub = parts[1] ?? "";
+    if (!sub || sub === "") {
+      setActiveMenu("dashboard");
+    } else {
+      setActiveMenu(sub);
+    }
+  }, [location.pathname]);
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: Home },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
-    { id: "users", label: "Users", icon: Users },
-    { id: "documents", label: "Documents", icon: FileText },
-    { id: "notifications", label: "Notifications", icon: Bell },
-    { id: "settings", label: "Settings", icon: Settings },
-    { id: "login", label: "Login", icon: ShieldCheck },
+    { id: "users", label: "Users Profile", icon: User2 },
+    { id: "payment", label: "Payment", icon: IndianRupee },
+    { id: "payment-history", label: "Payment History", icon: CreditCard },
+    { id: "certificate", label: "Certificate", icon: Award },
+    { id: "project", label: "Create Project", icon: Folder },
+    { id: "project-list", label: "Project List", icon: ClipboardList },
+    { id: "gallery", label: "Gallery", icon: Images },
   ];
 
   const renderContent = () => {
     switch (activeMenu) {
       case "dashboard":
         return <DashboardContent />;
-      case "analytics":
-        return <AnalyticsContent />;
       case "users":
-        return <UsersContent />;
-      case "documents":
-        return <DocumentsContent />;
-      case "notifications":
-        return <NotificationsContent />;
-      case "settings":
-        return <SettingsContent />;
-      case "login":
-        return <SignIn />;
+        return <UpdateUserProfile />;
+      case "payment":
+        return <PaymentContent />;
+      case "payment-history":
+        return <PaymentHistory />;
+      case "certificate":
+        return <Certificate />;
+      case "project":
+        return <ProjectUploader />;
+      case "project-list":
+        return <ProjectsContent />;
+      case "gallery":
+        return <GalleryUploader />;
       default:
         return <DashboardContent />;
     }
+  };
+
+  const currentUser = useSelector((state) => state.user.currentUser);
+
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+
+    setTimeout(() => {
+      dispatch(logout());
+      localStorage.removeItem("token");
+      navigate("/signin");
+    }, 1200); // Fake loading (1.2 sec)
+  };
+
+  const onMenuClick = (id) => {
+    setActiveMenu(id);
+    const path = id === "dashboard" ? "/employee" : `/employee/${id}`;
+    if (location.pathname !== path) navigate(path);
   };
 
   return (
@@ -67,7 +113,7 @@ export default function EmployeeDashboard() {
           className="p-4 flex items-center justify-between border-b"
           style={{ borderColor: "#0e1726" }}
         >
-          {sidebarOpen && <h1 className="text-xl font-bold">Employee</h1>}
+          {sidebarOpen && <h1 className="text-xl font-bold">Dashboard</h1>}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 rounded-lg hover:bg-[#0e1726] transition-colors"
@@ -88,7 +134,8 @@ export default function EmployeeDashboard() {
               return (
                 <li key={item.id}>
                   <button
-                    onClick={() => setActiveMenu(item.id)}
+                    // onClick={() => setActiveMenu(item.id)}
+                    onClick={() => onMenuClick(item.id)}
                     className={`w-full flex items-center gap-4 p-3 rounded-lg transition-all ${
                       activeMenu === item.id
                         ? "bg-[#805dca] shadow-lg"
@@ -108,19 +155,68 @@ export default function EmployeeDashboard() {
 
         {/* Sidebar Footer */}
         <div className="p-4 border-t border-[#805dca]">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-[#805dca] flex items-center justify-center font-bold">
-              U
+              {currentUser?.name?.charAt(0) || "U"}
             </div>
             {sidebarOpen && (
               <div>
-                <p className="font-medium text-sm">User Name</p>
-                <p className="text-xs text-[#4361ee]">user@email.com</p>
+                <p className="font-medium text-sm">
+                  {currentUser?.name || "User"}
+                </p>
+                <p className="text-xs text-[#4361ee]">{currentUser?.email}</p>
               </div>
             )}
           </div>
+
+          {/* ✅ Logout Button */}
+          <button
+            onClick={() => setShowLogoutModal(true)}
+            className="w-full flex items-center gap-3 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg backdrop-blur-md transition"
+          >
+            <ShieldCheck size={20} />
+            {sidebarOpen && <span>Logout</span>}
+          </button>
         </div>
       </div>
+
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+          <div
+            className="bg-[#0e1726] p-6 rounded-2xl shadow-xl w-full max-w-sm text-white 
+      border border-[#805dca]/40 animate-slideUp"
+          >
+            <h2 className="text-xl font-semibold mb-2">Are you sure?</h2>
+            <p className="text-gray-400 mb-6">
+              Do you really want to logout from your account?
+            </p>
+
+            <div className="flex justify-end gap-3">
+              {/* Cancel */}
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="px-4 py-2 rounded-lg bg-[#1b2e4b] hover:bg-[#263d63] transition"
+              >
+                Cancel
+              </button>
+
+              {/* Logout + Loading */}
+              <button
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className={`px-4 py-2 rounded-lg transition 
+          ${
+            isLoggingOut
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-[#805dca] hover:bg-[#6c49b4]"
+          }`}
+              >
+                {isLoggingOut ? "Logging out..." : "Yes, Logout"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
