@@ -101,6 +101,54 @@ exports.getPaymentTransactions = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate if ID is provided
+    if (!id) {
+      return res.status(400).json({
+        status: "Failure",
+        message: "User ID is required in URL.",
+      });
+    }
+
+    // SQL query for single user
+    const query = `SELECT * FROM employee WHERE id = ?`;
+
+    db.query(query, [id], (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred.",
+          error: err.message,
+        });
+      }
+
+      if (!results || results.length === 0) {
+        return res.status(404).json({
+          status: "Failure",
+          message: "User not found.",
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "User fetched successfully.",
+        data: results[0], // return only one user
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
 exports.getAllUser = async (req, res) => {
   try {
     // const query = `SELECT * FROM employee WHERE designation = 'Employee' ORDER BY id DESC `;
