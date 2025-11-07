@@ -1033,7 +1033,7 @@
     font-size: 30px;
     font-weight: 700;
     line-height: 30px;
-    color: var(--givewell-base);
+    color: rgb(255, 255, 255);
     position: relative;
     display: flex;
     align-items: center;
@@ -1045,7 +1045,7 @@
     font-size: 16px;
     line-height: 26px;
     font-weight: 500;
-    color: var(--givewell-black);
+    color: rgb(255, 255, 255);
     text-transform: capitalize;
 }
 

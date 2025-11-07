@@ -433,7 +433,6 @@
     transition-delay: 0.1s;
 }
 
-.donation-form-one form .form-group ul li input[type=radio]:checked+label {}
 
 .donation-form-one form .form-group ul li input[type=radio]:checked+label i {
     border-color: var(--givewell-base);
@@ -736,7 +735,7 @@
 .about-three__experience {
     position: absolute;
     bottom: 0;
-    right: -10px;
+    right: 0px;
     background-color: var(--givewell-primary);
     display: flex;
     align-items: center;

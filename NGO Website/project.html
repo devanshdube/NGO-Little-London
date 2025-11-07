@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title> Project || givewell || givewell HTML 5 Template </title>
+  <title>Future Kids Foundation</title>
   <!-- favicons Icons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png" />
@@ -163,11 +163,11 @@
                   </ul>
                 </div>
                 <div class="main-menu-three__btn-box">
-                  <a href="contact.html" class="main-menu-three__btn">
+                  <a href="https://ngo-admin.doaguru.com/" class="main-menu-three__btn">
                     <span class="icon-right-up"></span>
                     <p class="main-menu-three__btn-text">
-                      Get a <br />
-                      Free Quote
+                      Open <br />
+                      Workspace
                     </p>
                   </a>
                 </div>
@@ -203,27 +203,26 @@
 
     <!--Blog Page Start-->
     <section class="blog-three blog-page">
-  <div class="container">
-    <ul class="row list-unstyled" id="projects-container">
-      <!-- Projects dynamically load honge yahan -->
-    </ul>
+      <div class="container">
+        <ul class="row list-unstyled" id="projects-container">
+        </ul>
 
-    <div class="row">
-      <div class="col-xl-12">
-        <div class="blog-list__pagination">
-          <ul class="pg-pagination list-unstyled">
-            <li class="count active"><a href="#">1</a></li>
-            <li class="count"><a href="#">2</a></li>
-            <li class="count"><a href="#">3</a></li>
-            <li class="next">
-              <a href="#" aria-label="Next"><i class="icon-arrow-right"></i></a>
-            </li>
-          </ul>
+        <div class="row">
+          <div class="col-xl-12">
+            <!-- <div class="blog-list__pagination">
+              <ul class="pg-pagination list-unstyled">
+                <li class="count active"><a href="#">1</a></li>
+                <li class="count"><a href="#">2</a></li>
+                <li class="count"><a href="#">3</a></li>
+                <li class="next">
+                  <a href="#" aria-label="Next"><i class="icon-arrow-right"></i></a>
+                </li>
+              </ul>
+            </div> -->
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
     <!--Blog Page End-->
 
@@ -500,23 +499,22 @@
   <script src="assets/js/script.js"></script>
 
   <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    fetch("https://ngo-admin.doaguru.com/auth/api/website/getAllProjects")
-      .then(response => response.json())
-      .then(data => {
-        console.log(data); // For debugging
-        const container = document.getElementById("projects-container");
-        container.innerHTML = ""; // Clear old static cards
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch("https://ngo-admin.doaguru.com/auth/api/website/getAllProjects")
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById("projects-container");
+          container.innerHTML = ""; // Clear old static cards
 
-        if (data.status === "Success" && data.projects.length > 0) {
-          data.projects.forEach(project => {
-            // ✅ Agar file_name empty hai to ek default image lagao
-            const imageSrc = project.file_name
-              ? project.file_name
-              : "assets/images/default-project.jpg";
+          if (data.status === "Success" && data.projects.length > 0) {
+            data.projects.forEach(project => {
+              // ✅ Agar file_name empty hai to ek default image lagao
+              const imageSrc = project.file_name
+                ? project.file_name
+                : "assets/images/default-project.jpg";
 
-            // ✅ project-details.html me project_id ke sath link pass kiya gaya hai
-            const projectHTML = `
+              // ✅ project-details.html me project_id ke sath link pass kiya gaya hai
+              const projectHTML = `
               <li class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
                 <div class="blog-three__single">
                   <div class="blog-three__tag">
@@ -543,19 +541,19 @@
                 </div>
               </li>
             `;
-            container.insertAdjacentHTML("beforeend", projectHTML);
-          });
-        } else {
-          container.innerHTML = "<p>No projects found.</p>";
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching projects:", error);
-        document.getElementById("projects-container").innerHTML =
-          "<p>Failed to load projects.</p>";
-      });
-  });
-</script>
+              container.insertAdjacentHTML("beforeend", projectHTML);
+            });
+          } else {
+            container.innerHTML = "<p>No projects found.</p>";
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching projects:", error);
+          document.getElementById("projects-container").innerHTML =
+            "<p>Failed to load projects.</p>";
+        });
+    });
+  </script>
 
 
 </body>
