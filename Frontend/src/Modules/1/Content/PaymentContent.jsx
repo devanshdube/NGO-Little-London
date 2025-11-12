@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import SmartAlert from "../../../Components/Alerts/SmartAlert";
 import { UploadCloud } from "lucide-react";
-import QRCode from "./../../../assets/upi-qr.jpg";
+import QRCode from "./../../../assets/upi-qr-code.jpg";
 
 const API_URL = "https://ngo-admin.doaguru.com/auth/api/ngo/post/postPayment";
 
@@ -203,10 +203,10 @@ const PaymentContent = () => {
 
   // Static organization bank details (edit with your real info)
   const ORGANIZATION_BANK = {
-    bankName: "State Bank of India",
-    accountNo: "123456789012",
-    ifsc: "SBIN0001234",
-    branch: "Jabalpur Main Branch",
+    bankName: "CANARA BANK",
+    accountNo: "120036332209",
+    ifsc: "CNRB0005556",
+    branch: "5556-JABALPUR RANITAL 482001",
   };
 
   // auto-fill bankName & branchName when method is Net Banking

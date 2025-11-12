@@ -51,12 +51,12 @@ export default function EmployeeDashboard() {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: Home },
     { id: "users", label: "Users Profile", icon: User2 },
-    { id: "payment", label: "Payment", icon: IndianRupee },
-    { id: "payment-history", label: "Payment History", icon: CreditCard },
+    // { id: "payment", label: "Payment", icon: IndianRupee },
+    // { id: "payment-history", label: "Payment History", icon: CreditCard },
     { id: "certificate", label: "Certificate", icon: Award },
-    { id: "project", label: "Create Project", icon: Folder },
-    { id: "project-list", label: "Project List", icon: ClipboardList },
-    { id: "gallery", label: "Gallery", icon: Images },
+    // { id: "project", label: "Create Project", icon: Folder },
+    // { id: "project-list", label: "Project List", icon: ClipboardList },
+    // { id: "gallery", label: "Gallery", icon: Images },
   ];
 
   const renderContent = () => {
@@ -226,7 +226,7 @@ export default function EmployeeDashboard() {
             <h2 className="hidden sm:block text-2xl font-bold text-gray-800 capitalize">
               {activeMenu}
             </h2>
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <div className="relative">
                 <Search
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -242,7 +242,7 @@ export default function EmployeeDashboard() {
                 <Bell size={24} className="text-gray-600" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
-            </div>
+            </div> */}
           </div>
         </header>
 

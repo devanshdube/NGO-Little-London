@@ -1,14 +1,17 @@
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
-import logoImg from "./../../../assets/Apple 250.png";
+import imgCertificate from "./../../../assets/Apple 250.png";
 
-export default function Certificate({
+export default function CertificateManagerModal({
+  name: propName,
   presidentName = "Keerti Sharma",
   viceName = "Pradeep Ingalkar",
-  logo = logoImg,
+  logo = imgCertificate,
 }) {
   const currentUser = useSelector((state) => state.user.currentUser);
   const printRef = useRef();
+
+  const displayName = propName ?? currentUser?.name ?? "Recipient Name";
 
   const handlePrint = () => {
     const printContents = printRef.current.innerHTML;
@@ -206,7 +209,8 @@ export default function Certificate({
         {/* Recipient Name */}
         <div className="recipient">
           <div className="recipient-name">
-            {currentUser?.name || "Recipient"}
+            {/* {currentUser?.name || "Recipient"} */}
+            {displayName}
           </div>
         </div>
 
@@ -235,16 +239,22 @@ export default function Certificate({
   );
 }
 
+// // src/components/Certificate.jsx
 // import React from "react";
 // import { useSelector } from "react-redux";
 // import imgCertificate from "./../../../assets/Apple 250.png";
 
-// export default function Certificate({
+// export default function CertificateManagerModal({
+//   name: propName,
 //   presidentName = "Keerti Sharma",
 //   viceName = "Pradeep Ingalkar",
 //   logo = imgCertificate,
 // }) {
+//   // const dispatch = useDispatch();
 //   const currentUser = useSelector((state) => state.user.currentUser);
+
+//   // use propName if provided, else fallback to currentUser?.name (kept for compatibility)
+//   const displayName = propName ?? currentUser?.name ?? "Recipient Name";
 
 //   return (
 //     <div className="min-h-screen flex items-center justify-center box-border">
@@ -254,6 +264,8 @@ export default function Certificate({
 //           background: "#FFF3D9",
 //         }}
 //       >
+//         {/* Decorative Corners */}
+//         {/* Top-left corner */}
 //         <svg
 //           viewBox="0 0 200 200"
 //           className="absolute top-0 left-0 w-[200px] h-[200px]"
@@ -360,7 +372,7 @@ export default function Certificate({
 //                   className="text-[#0d2b5b] font-semibold"
 //                   style={{ fontSize: "clamp(20px, 3.6vw, 40px)" }}
 //                 >
-//                   {currentUser?.name}
+//                   {displayName}
 //                 </div>
 //               </div>
 

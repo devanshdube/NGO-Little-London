@@ -361,7 +361,7 @@ export default function DashboardContent() {
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Users"
           value={counts.users}
@@ -404,7 +404,7 @@ export default function DashboardContent() {
           hint={errors.gallery ? `Error: ${errors.gallery}` : "Uploaded images"}
           onView={() => to("gallery")}
         />
-      </div>
+      </div> */}
 
       {/* All Admins (replaces Recent Activity) */}
       <div className="bg-white rounded-lg shadow p-6">

@@ -17,6 +17,7 @@ import {
   ClipboardList,
   Images,
   Phone,
+  IdCard,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Redux/user/userSlice";
@@ -35,6 +36,7 @@ import ProjectUploader from "./Content/ProjectUploader";
 import ProjectsContent from "./Content/ProjectsContent";
 import GalleryUploader from "./Content/GalleryUploader";
 import ContactUsHistory from "./Content/ContactUsHistory";
+import CertificateGenerate from "./Content/CertificateGenerate";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -69,6 +71,7 @@ export default function Dashboard() {
     { id: "payment", label: "Payment", icon: IndianRupee },
     { id: "payment-history", label: "Payment History", icon: CreditCard },
     { id: "certificate", label: "Certificate", icon: Award },
+    { id: "certificate-generate", label: "Create Certificate", icon: IdCard },
     { id: "project", label: "Create Project", icon: Folder },
     { id: "project-list", label: "Project List", icon: ClipboardList },
     { id: "gallery", label: "Gallery", icon: Images },
@@ -97,6 +100,8 @@ export default function Dashboard() {
         return <PaymentHistory />;
       case "certificate":
         return <Certificate />;
+      case "certificate-generate":
+        return <CertificateGenerate />;
       case "project":
         return <ProjectUploader />;
       case "project-list":
@@ -255,7 +260,7 @@ export default function Dashboard() {
             <h2 className="hidden sm:block text-2xl font-bold text-gray-800 capitalize">
               {activeMenu}
             </h2>
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <div className="relative">
                 <Search
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -271,7 +276,7 @@ export default function Dashboard() {
                 <Bell size={24} className="text-gray-600" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
-            </div>
+            </div> */}
           </div>
         </header>
 
