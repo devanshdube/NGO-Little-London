@@ -154,3 +154,36 @@ exports.deleteGalleryImage = (req, res) => {
     });
   });
 };
+
+exports.deleteCertificate = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // ✅ Validate
+    if (!id) {
+      return res.status(400).json({ error: "ID is required" });
+    }
+
+    const query = "DELETE FROM certificate WHERE id = ?";
+
+    db.query(query, [id], (err, result) => {
+      if (err) {
+        console.error("Delete error: ", err);
+        return res.status(500).json({ error: "Database delete issue" });
+      }
+
+      // ✅ If no record found
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Record not found" });
+      }
+
+      res.status(200).json({
+        status: "Success",
+        message: "Certificate deleted successfully",
+      });
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server side issue" });
+  }
+};

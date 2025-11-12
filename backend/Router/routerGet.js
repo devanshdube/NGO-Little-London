@@ -10,6 +10,8 @@ const {
   getAllAdmin,
   getAllQuerys,
   getUserById,
+  getAllCertificates,
+  getCertificateById,
 } = require("../Controller/controllerGet");
 const { employeeLimiter } = require("../Middleware/rateLimiter");
 const authenticateToken = require("../Middleware/authenticateToken");
@@ -30,5 +32,7 @@ router.get("/getProjectById/:id", authenticateToken, getProjectById);
 router.get("/getApprovedProjects", authenticateToken, getApprovedProjects);
 router.get("/getGalleryImages", authenticateToken, getGalleryImages);
 router.get("/getUser/:id", authenticateToken, getUserById);
+router.get("/getAllCertificates", getAllCertificates);
+router.get("/getCertificateById/:id", getCertificateById);
 
 module.exports = router;

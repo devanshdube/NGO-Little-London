@@ -82,6 +82,12 @@ CREATE TABLE gallery (
   updated_at VARCHAR(255) DEFAULT NULL
 );
 
+CREATE TABLE certificate (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(250) NOT NULL,
+  status ENUM('active','inactive') DEFAULT 'active',
+  created_at VARCHAR(255) NOT NULL
+);
 
 
 

@@ -480,3 +480,60 @@ exports.getAllQuerys = async (req, res) => {
     });
   }
 };
+
+exports.getAllCertificates = async (req, res) => {
+  try {
+    const query = "SELECT * FROM certificate ORDER BY id DESC";
+
+    db.query(query, (err, result) => {
+      if (err) {
+        console.error("Fetch error: ", err);
+        return res.status(500).json({ error: "Database fetch issue" });
+      }
+
+      if (result.length === 0) {
+        return res.status(404).json({ message: "No certificates found" });
+      }
+
+      res.status(200).json({
+        status: "Success",
+        count: result.length,
+        data: result,
+      });
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server side issue" });
+  }
+};
+
+exports.getCertificateById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID is required" });
+    }
+
+    const query = "SELECT * FROM certificate WHERE id = ?";
+
+    db.query(query, [id], (err, result) => {
+      if (err) {
+        console.error("Fetch by ID error: ", err);
+        return res.status(500).json({ error: "Database fetch issue" });
+      }
+
+      if (result.length === 0) {
+        return res.status(404).json({ message: "Certificate not found" });
+      }
+
+      res.status(200).json({
+        status: "Success",
+        data: result[0],
+      });
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server side issue" });
+  }
+};

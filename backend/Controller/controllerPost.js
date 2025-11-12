@@ -370,3 +370,35 @@ exports.uploadGalleryImages = (req, res) => {
       .json({ status: "Error", message: "Internal server error" });
   }
 };
+
+exports.postCertificate = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+    if (!name) {
+      return res.status(400).json({ error: "Name are required" });
+    }
+    const values = [name, createdAt];
+
+    const query = "INSERT INTO certificate (name, created_at) VALUES (?, ?)";
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error("data insert nahi ho raha hai: ", err);
+        return res
+          .status(500)
+          .json({ error: "Database insertion ka issue hai" });
+      }
+      res.status(201).json({
+        status: "Success",
+        message: "Data inserted successfully",
+        data: result,
+      });
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server side ka issue hai" });
+  }
+};

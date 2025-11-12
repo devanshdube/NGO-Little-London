@@ -8,6 +8,7 @@ const {
   postProject,
   postProjectDetails,
   uploadGalleryImages,
+  postCertificate,
 } = require("../Controller/controllerPost");
 
 const router = express.Router();
@@ -90,5 +91,7 @@ router.post(
   },
   uploadGalleryImages
 );
+
+router.post("/postCertificate", postCertificate);
 
 module.exports = router;
