@@ -12,6 +12,10 @@ const {
   getUserById,
   getAllCertificates,
   getCertificateById,
+  getAllSchoolQuerys,
+  getAllSchoolAdmissionQuerys,
+  getSchoolGalleryImages,
+  getSchoolFranchiseQuerys,
 } = require("../Controller/controllerGet");
 const { employeeLimiter } = require("../Middleware/rateLimiter");
 const authenticateToken = require("../Middleware/authenticateToken");
@@ -34,5 +38,26 @@ router.get("/getGalleryImages", authenticateToken, getGalleryImages);
 router.get("/getUser/:id", authenticateToken, getUserById);
 router.get("/getAllCertificates", getAllCertificates);
 router.get("/getCertificateById/:id", getCertificateById);
+
+// +++++++++++++++++++++++++++++++++++++++++++++
+
+// New route for school form submissions
+
+router.get("/getAllSchoolQuerys", authenticateToken, getAllSchoolQuerys);
+router.get(
+  "/getAllSchoolAdmissionQuerys",
+  authenticateToken,
+  getAllSchoolAdmissionQuerys
+);
+router.get(
+  "/getSchoolGalleryImages",
+  authenticateToken,
+  getSchoolGalleryImages
+);
+router.get(
+  "/getSchoolFranchiseQuerys",
+  authenticateToken,
+  getSchoolFranchiseQuerys
+);
 
 module.exports = router;

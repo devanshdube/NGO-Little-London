@@ -187,3 +187,74 @@ exports.deleteCertificate = async (req, res) => {
     res.status(500).json({ error: "Server side issue" });
   }
 };
+
+// ================================
+
+// ###### School Project Posting APIs ######
+
+function trySchoolRemoveUploadFile(fileUrl) {
+  try {
+    if (!fileUrl) return;
+    const uploadsMarker = "/schoolUpload/";
+    const idx = fileUrl.indexOf(uploadsMarker);
+    if (idx === -1) return;
+
+    const filename = fileUrl.slice(idx + uploadsMarker.length);
+    const safeFilename = path.basename(filename);
+    const uploadPath = path.join(__dirname, "..", "schoolUpload", safeFilename);
+
+    if (fs.existsSync(uploadPath)) {
+      fs.unlinkSync(uploadPath);
+    }
+  } catch (err) {
+    console.error("Error removing upload file:", err);
+  }
+}
+
+exports.deleteSchoolGalleryImage = (req, res) => {
+  const id = Number(req.params.id);
+  if (!id || Number.isNaN(id)) {
+    return res.status(400).json({ status: "Error", message: "Invalid id" });
+  }
+
+  // 1) get file_name
+  const selectQ = "SELECT file_name FROM school_gallery WHERE id = ?";
+  db.query(selectQ, [id], (selErr, selRows) => {
+    if (selErr) {
+      console.error("DB select error:", selErr);
+      return res
+        .status(500)
+        .json({ status: "Error", message: "Database error" });
+    }
+    if (!selRows || selRows.length === 0) {
+      return res
+        .status(404)
+        .json({ status: "Not Found", message: "Image not found" });
+    }
+
+    const file_name = selRows[0].file_name;
+
+    // 2) delete row
+    const delQ = "DELETE FROM school_gallery WHERE id = ?";
+    db.query(delQ, [id], (delErr, delRes) => {
+      if (delErr) {
+        console.error("DB delete error:", delErr);
+        return res
+          .status(500)
+          .json({ status: "Error", message: "Database deletion error" });
+      }
+      if (delRes.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ status: "Not Found", message: "Image not found" });
+      }
+
+      // 3) remove file (best-effort)
+      trySchoolRemoveUploadFile(file_name);
+
+      return res
+        .status(200)
+        .json({ status: "Success", message: "Image deleted" });
+    });
+  });
+};

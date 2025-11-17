@@ -9,6 +9,11 @@ const {
   postProjectDetails,
   uploadGalleryImages,
   postCertificate,
+  postSchoolContactData,
+  postSchoolAdmissionData,
+  uploadSchoolGalleryImages,
+  postSchoolfranchiseData,
+  postSchoolNewsEvents,
 } = require("../Controller/controllerPost");
 
 const router = express.Router();
@@ -93,5 +98,74 @@ router.post(
 );
 
 router.post("/postCertificate", postCertificate);
+
+// +++++++++++++++++++++++++++++++++++++++++++++
+
+// New route for school form submissions
+
+router.post("/postSchoolContactData", postSchoolContactData);
+router.post("/postSchoolAdmissionData", postSchoolAdmissionData);
+
+const storageSchool = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "schoolUpload/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+function imageSchoolFileFilter(req, file, cb) {
+  if (!file.mimetype.startsWith("image/")) {
+    return cb(new multer.MulterError("LIMIT_UNEXPECTED_FILE", "file_name"));
+  }
+  cb(null, true);
+}
+
+const fileschoolupload = multer({
+  storage: storageSchool,
+  fileFilter: imageSchoolFileFilter,
+  limits: { files: 20, fileSize: 2 * 1024 * 1024 },
+});
+
+router.post(
+  "/uploadSchoolGalleryImages",
+  (req, res, next) => {
+    fileschoolupload.array("file_name", 20)(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_UNEXPECTED_FILE") {
+          return res.status(400).json({
+            status: "Error",
+            message: "Only image files are allowed",
+          });
+        }
+
+        return res.status(400).json({ status: "Error", message: err.message });
+      }
+
+      if (err) {
+        return res.status(400).json({ status: "Error", message: err.message });
+      }
+
+      next();
+    });
+  },
+  uploadSchoolGalleryImages
+);
+
+router.post("/postSchoolfranchiseData", postSchoolfranchiseData);
+
+const schoolupload = multer({
+  storageSchool,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+});
+
+router.post(
+  "/postSchoolNewsEvents",
+  schoolupload.fields([{ name: "file_name", maxCount: 1 }]),
+  postSchoolNewsEvents
+);
 
 module.exports = router;

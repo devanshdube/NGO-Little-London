@@ -402,3 +402,317 @@ exports.postCertificate = async (req, res) => {
     res.status(500).json({ error: "Server side ka issue hai" });
   }
 };
+
+// ================================
+
+// ###### School Project Posting APIs ######
+
+exports.postSchoolContactData = async (req, res) => {
+  try {
+    const { name, email, phone, subject, message } = req.body;
+
+    const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+    if (!name || !email || !phone || !message) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    const values = [name, email, phone, subject, message, createdAt];
+
+    const query =
+      "INSERT INTO school_contact (name, email, phone, subject, message, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error("data insert nahi ho raha hai: ", err);
+        return res
+          .status(500)
+          .json({ error: "Database insertion ka issue hai" });
+      }
+      res.status(201).json({
+        status: "Success",
+        message: "Data inserted successfully",
+        data: result,
+      });
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server side ka issue hai" });
+  }
+};
+
+exports.postSchoolAdmissionData = async (req, res) => {
+  try {
+    const {
+      studen_name,
+      parent_name,
+      email,
+      phone,
+      class_for,
+      branch,
+      information,
+    } = req.body;
+
+    const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+    if (!studen_name || !parent_name || !email || !phone) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    const values = [
+      studen_name,
+      parent_name,
+      email,
+      phone,
+      class_for,
+      branch,
+      information,
+      createdAt,
+    ];
+
+    const query =
+      "INSERT INTO school_admission (studen_name, parent_name, email, phone, class_for, branch, information, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error("data insert nahi ho raha hai: ", err);
+        return res
+          .status(500)
+          .json({ error: "Database insertion ka issue hai" });
+      }
+      res.status(201).json({
+        status: "Success",
+        message: "Data inserted successfully",
+        data: result,
+      });
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server side ka issue hai" });
+  }
+};
+
+exports.uploadSchoolGalleryImages = (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        status: "Error",
+        message: "At least one image is required",
+      });
+    }
+
+    const uploadsDir = path.join(__dirname, "../schoolUpload");
+    const domain = process.env.domain;
+    const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+    const values = req.files.map((f) => [
+      `${domain}/schoolUpload/${f.filename}`,
+      createdAt,
+    ]);
+
+    const placeholders = values.map(() => "(?, ?)").join(", ");
+    const flat = values.flat();
+
+    const query = `INSERT INTO school_gallery (file_name, created_at) VALUES ${placeholders}`;
+
+    db.query(query, flat, (err, result) => {
+      if (err) {
+        console.error("DB insert error:", err);
+
+        req.files.forEach((f) => {
+          const p = path.join(uploadsDir, f.filename);
+          if (fs.existsSync(p)) fs.unlinkSync(p);
+        });
+
+        return res
+          .status(500)
+          .json({ status: "Error", message: "Database insertion error" });
+      }
+
+      const insertedBaseId = result.insertId;
+      const insertedCount = req.files.length;
+
+      const inserted = req.files.map((f, i) => ({
+        id: insertedBaseId + i,
+        file_name: `${domain}/schoolUpload/${f.filename}`,
+        created_at: createdAt,
+      }));
+
+      return res.status(201).json({
+        status: "Success",
+        message: "Images uploaded successfully",
+        count: insertedCount,
+        inserted,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+
+    const uploadsDir = path.join(__dirname, "../schoolUpload");
+
+    if (req.files) {
+      req.files.forEach((f) => {
+        const p = path.join(uploadsDir, f.filename);
+        if (fs.existsSync(p)) fs.unlinkSync(p);
+      });
+    }
+
+    return res
+      .status(500)
+      .json({ status: "Error", message: "Internal server error" });
+  }
+};
+
+exports.postSchoolfranchiseData = async (req, res) => {
+  try {
+    const { name, email, phone, message } = req.body;
+
+    const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+    if (!name || !email || !phone) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    const values = [name, email, phone, message, createdAt];
+
+    const query =
+      "INSERT INTO school_franchise (name, email, phone, message, created_at) VALUES (?, ?, ?, ?, ?)";
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error("data insert nahi ho raha hai: ", err);
+        return res
+          .status(500)
+          .json({ error: "Database insertion ka issue hai" });
+      }
+      res.status(201).json({
+        status: "Success",
+        message: "Data inserted successfully",
+        data: result,
+      });
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server side ka issue hai" });
+  }
+};
+
+exports.postSchoolNewsEvents = async (req, res) => {
+  try {
+    const { title } = req.body;
+
+    const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+    const domain = process.env.domain;
+
+    // ✅ file required check
+    if (!req.files || !req.files.file_name) {
+      return res.status(400).json({
+        error: "File is required",
+      });
+    }
+
+    const file_name = `${domain}/schoolUpload/${req.files.file_name[0].filename}`;
+
+    // ✅ title check
+    if (!title || title.trim() === "") {
+      // delete uploaded file if validation fails
+      const filePath = req.files.file_name[0].path;
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+      return res.status(400).json({
+        error: "Title is required",
+      });
+    }
+
+    const query = `
+      INSERT INTO school_news_events
+    (title, file_name, created_at)
+      VALUES (?, ?, ?)
+    `;
+
+    const values = [title, file_name, createdAt];
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error("DB insert error:", err);
+
+        // ✅ delete file if DB error occurs
+        const filePath = req.files.file_name[0].path;
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+        return res.status(500).json({ error: "Database insertion error" });
+      }
+
+      return res.status(201).json({
+        status: "Success",
+        message: "News & Events recorded",
+        insertedId: result.insertId,
+        created_at: createdAt,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+
+    // ✅ delete file on server error
+    if (req.files?.file_name) {
+      const filePath = req.files.file_name[0].path;
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    }
+
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// exports.postSchoolNewsEvents = async (req, res) => {
+//   try {
+//     const { title } = req.body;
+
+//     const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+//     const domain = process.env.domain;
+//     const file_name = req.files.file_name
+//       ? `${domain}/schoolUpload/${req.files.file_name[0].filename}`
+//       : null;
+
+//     if (!title) {
+//       return res.status(400).json({
+//         error: "title are required",
+//       });
+//     }
+
+//     const query = `
+//         INSERT INTO school_news_events
+//         (title, file_name, created_at)
+//         VALUES (?, ?, ?)
+//       `;
+
+//     const values = [title, file_name, createdAt];
+
+//     db.query(query, values, (err, result) => {
+//       if (err) {
+//         console.error("DB insert error:", err);
+
+//         if (req.files?.file_name) {
+//           const filePath = req.files.file_name[0].path;
+//           if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+//         }
+
+//         return res.status(500).json({ error: "Database insertion error" });
+//       }
+
+//       return res.status(201).json({
+//         status: "Success",
+//         message: "Data recorded",
+//         insertedId: result.insertId,
+//         created_at: createdAt,
+//       });
+//     });
+//   } catch (error) {
+//     console.error("Server error:", error);
+
+//     if (req.files?.file_name) {
+//       const filePath = req.files.file_name[0].path;
+//       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+//     }
+
+//     return res.status(500).json({ error: "Internal server error" });
+//   }
+// };

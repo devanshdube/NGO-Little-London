@@ -537,3 +537,117 @@ exports.getCertificateById = async (req, res) => {
     res.status(500).json({ error: "Server side issue" });
   }
 };
+
+// ================================
+
+// ###### School Project Posting APIs ######
+
+exports.getAllSchoolQuerys = async (req, res) => {
+  try {
+    const query = `SELECT * FROM school_contact ORDER BY id DESC `;
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred",
+          error: err.message,
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "All Querys fetched successfully",
+        count: results.length,
+        data: results,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+exports.getAllSchoolAdmissionQuerys = async (req, res) => {
+  try {
+    const query = `SELECT * FROM school_admission ORDER BY id DESC `;
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred",
+          error: err.message,
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "All Querys fetched successfully",
+        count: results.length,
+        data: results,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+exports.getSchoolGalleryImages = (req, res) => {
+  const query = "SELECT * FROM school_gallery ORDER BY created_at DESC";
+  db.query(query, (err, rows) => {
+    if (err) {
+      console.error("DB gallery select error:", err);
+      return res
+        .status(500)
+        .json({ status: "Error", message: "Database error" });
+    }
+    return res.status(200).json({
+      status: "Success",
+      count: Array.isArray(rows) ? rows.length : 0,
+      images: rows || [],
+    });
+  });
+};
+
+exports.getSchoolFranchiseQuerys = async (req, res) => {
+  try {
+    const query = `SELECT * FROM school_franchise ORDER BY id DESC `;
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: "Failure",
+          message: "Database error occurred",
+          error: err.message,
+        });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "All Querys fetched successfully",
+        count: results.length,
+        data: results,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      status: "Failure",
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};

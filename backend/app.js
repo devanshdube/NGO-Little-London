@@ -24,6 +24,7 @@ app.use("/auth/api/ngo/update", updateRouter);
 app.use("/auth/api/ngo/delete", deleteRouter);
 app.use("/auth/api/ngo/login", authRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/schoolUpload", express.static(path.join(__dirname, "schoolUpload")));
 
 const PORT = process.env.PORT || 5555;
 app.listen(PORT, () => {

@@ -89,5 +89,48 @@ CREATE TABLE certificate (
   created_at VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE school_contact (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  subject VARCHAR(255),
+  message text,
+  created_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE school_admission (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  studen_name VARCHAR(255) NOT NULL,
+  parent_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  class_for VARCHAR(255),
+  branch VARCHAR(255),
+  information text,
+  created_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE school_gallery (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  file_name VARCHAR(512) NOT NULL,
+  created_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE school_franchise (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  message text,
+  created_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS school_news_events (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  file_name VARCHAR(512) NOT NULL,
+  created_at VARCHAR(255) NOT NULL
+);
 
 
