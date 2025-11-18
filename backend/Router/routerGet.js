@@ -16,6 +16,8 @@ const {
   getAllSchoolAdmissionQuerys,
   getSchoolGalleryImages,
   getSchoolFranchiseQuerys,
+  getSchoolNewsEventsQuerys,
+  getSchoolNoticeQuerys,
 } = require("../Controller/controllerGet");
 const { employeeLimiter } = require("../Middleware/rateLimiter");
 const authenticateToken = require("../Middleware/authenticateToken");
@@ -59,5 +61,11 @@ router.get(
   authenticateToken,
   getSchoolFranchiseQuerys
 );
+router.get(
+  "/getSchoolNewsEventsQuerys",
+  authenticateToken,
+  getSchoolNewsEventsQuerys
+);
+router.get("/getSchoolNoticeQuerys", getSchoolNoticeQuerys);
 
 module.exports = router;

@@ -9,6 +9,10 @@ const {
   verifyOtpAndResetPassword,
   updateUser,
   deleteUser,
+  registerSchool,
+  loginSchool,
+  forgotSchoolPassword,
+  verifyOtpAndResetSchoolPassword,
 } = require("../Controller/controllerAuth");
 
 const router = express.Router();
@@ -39,6 +43,18 @@ router.post("/forgotPassword", forgotPassword);
 router.post("/verifyOtpAndResetPassword", verifyOtpAndResetPassword);
 router.put("/updateUser/:id", upload.single("user_profile"), updateUser);
 router.delete("/deleteUser/:id", deleteUser);
+
+// =============================================
+
+// School Admin Routes
+
+router.post("/registerSchool", registerSchool);
+router.post("/loginSchool", loginSchool);
+router.post("/forgotSchoolPassword", forgotSchoolPassword);
+router.post(
+  "/verifyOtpAndResetSchoolPassword",
+  verifyOtpAndResetSchoolPassword
+);
 
 module.exports = router;
 

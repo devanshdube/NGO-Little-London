@@ -14,6 +14,7 @@ const {
   uploadSchoolGalleryImages,
   postSchoolfranchiseData,
   postSchoolNewsEvents,
+  postSchoolNoticeData,
 } = require("../Controller/controllerPost");
 
 const router = express.Router();
@@ -155,17 +156,12 @@ router.post(
 
 router.post("/postSchoolfranchiseData", postSchoolfranchiseData);
 
-const schoolupload = multer({
-  storageSchool,
-  limits: {
-    fileSize: 2 * 1024 * 1024,
-  },
-});
-
 router.post(
   "/postSchoolNewsEvents",
-  schoolupload.fields([{ name: "file_name", maxCount: 1 }]),
+  fileschoolupload.fields([{ name: "file_name", maxCount: 1 }]),
   postSchoolNewsEvents
 );
+
+router.post("/postSchoolNoticeData", postSchoolNoticeData);
 
 module.exports = router;

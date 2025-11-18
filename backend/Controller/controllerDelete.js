@@ -258,3 +258,88 @@ exports.deleteSchoolGalleryImage = (req, res) => {
     });
   });
 };
+
+exports.deleteSchoolNewsEvents = (req, res) => {
+  const projectId = Number(req.params.id);
+  if (!projectId || Number.isNaN(projectId)) {
+    return res
+      .status(400)
+      .json({ status: "Error", message: "Invalid News Events id" });
+  }
+
+  const selectQuery = "SELECT file_name FROM school_news_events WHERE id = ?";
+  db.query(selectQuery, [projectId], (selErr, selRows) => {
+    if (selErr) {
+      console.error("Select error:", selErr);
+      return res
+        .status(500)
+        .json({ status: "Error", message: "Database error" });
+    }
+
+    if (!selRows || selRows.length === 0) {
+      return res
+        .status(404)
+        .json({ status: "Not Found", message: "Project not found" });
+    }
+
+    const file_name = selRows[0].file_name;
+
+    const deleteQuery = "DELETE FROM school_news_events WHERE id = ?";
+    db.query(deleteQuery, [projectId], (delErr, delResult) => {
+      if (delErr) {
+        console.error("Delete error:", delErr);
+        return res
+          .status(500)
+          .json({ status: "Error", message: "Database deletion error" });
+      }
+
+      if (delResult.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ status: "Not Found", message: "News Events not found" });
+      }
+
+      try {
+        trySchoolRemoveUploadFile(file_name);
+      } catch (fileErr) {
+        console.error("File removal error:", fileErr);
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "News Events deleted",
+      });
+    });
+  });
+};
+
+exports.deleteSchoolNotice = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "Notice ID is required" });
+    }
+
+    const query = "DELETE FROM school_notice WHERE id = ?";
+
+    db.query(query, [id], (err, result) => {
+      if (err) {
+        console.error("Notice delete nahi ho raha hai: ", err);
+        return res.status(500).json({ error: "Database ka issue hai" });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Notice not found" });
+      }
+
+      res.status(200).json({
+        status: "Success",
+        message: "Notice deleted successfully",
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({ error: "Server side ka issue hai" });
+  }
+};

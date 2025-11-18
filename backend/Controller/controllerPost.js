@@ -661,58 +661,35 @@ exports.postSchoolNewsEvents = async (req, res) => {
   }
 };
 
-// exports.postSchoolNewsEvents = async (req, res) => {
-//   try {
-//     const { title } = req.body;
+exports.postSchoolNoticeData = async (req, res) => {
+  try {
+    const { title, description } = req.body;
 
-//     const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+    const createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
 
-//     const domain = process.env.domain;
-//     const file_name = req.files.file_name
-//       ? `${domain}/schoolUpload/${req.files.file_name[0].filename}`
-//       : null;
+    if (!title || !description) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    const values = [title, description, createdAt];
 
-//     if (!title) {
-//       return res.status(400).json({
-//         error: "title are required",
-//       });
-//     }
+    const query =
+      "INSERT INTO school_notice (title, description, created_at) VALUES (?, ?, ?)";
 
-//     const query = `
-//         INSERT INTO school_news_events
-//         (title, file_name, created_at)
-//         VALUES (?, ?, ?)
-//       `;
-
-//     const values = [title, file_name, createdAt];
-
-//     db.query(query, values, (err, result) => {
-//       if (err) {
-//         console.error("DB insert error:", err);
-
-//         if (req.files?.file_name) {
-//           const filePath = req.files.file_name[0].path;
-//           if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-//         }
-
-//         return res.status(500).json({ error: "Database insertion error" });
-//       }
-
-//       return res.status(201).json({
-//         status: "Success",
-//         message: "Data recorded",
-//         insertedId: result.insertId,
-//         created_at: createdAt,
-//       });
-//     });
-//   } catch (error) {
-//     console.error("Server error:", error);
-
-//     if (req.files?.file_name) {
-//       const filePath = req.files.file_name[0].path;
-//       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-//     }
-
-//     return res.status(500).json({ error: "Internal server error" });
-//   }
-// };
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error("data insert nahi ho raha hai: ", err);
+        return res
+          .status(500)
+          .json({ error: "Database insertion ka issue hai" });
+      }
+      res.status(201).json({
+        status: "Success",
+        message: "Data inserted successfully",
+        data: result,
+      });
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    res.status(500).json({ error: "Server side ka issue hai" });
+  }
+};

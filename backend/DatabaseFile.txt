@@ -133,4 +133,11 @@ CREATE TABLE IF NOT EXISTS school_news_events (
   created_at VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS school_notice (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description text NOT NULL,
+  created_at VARCHAR(255) NOT NULL
+);
+
 
