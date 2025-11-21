@@ -6,14 +6,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout as logoutAction } from "./../../../Redux/user/userSlice";
 
-const API_USERS = "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllUser";
+const API_USERS =
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getAllUser";
 const API_PAYMENTS =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getPaymentTransactions";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getPaymentTransactions";
 const API_PROJECTS =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllProjects";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getAllProjects";
 const API_GALLERY =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getGalleryImages";
-const API_ADMINS = "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllAdmin";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getGalleryImages";
+const API_ADMINS =
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getAllAdmin";
 
 function useKolkataDate() {
   const [now, setNow] = useState(() => new Date());

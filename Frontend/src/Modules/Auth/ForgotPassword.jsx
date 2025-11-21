@@ -5,7 +5,7 @@ import { Mail, Lock } from "lucide-react";
 import SmartAlert from "../../Components/Alerts/SmartAlert";
 import InputField from "../../Components/InputField";
 
-const API_BASE = "https://ngo-admin.doaguru.com";
+const API_BASE = "https://kidschool.futurekidfoundation.org";
 
 const initialState = {
   email: "",

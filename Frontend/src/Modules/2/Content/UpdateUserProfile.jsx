@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 
-const GET_USER_URL = "https://ngo-admin.doaguru.com/auth/api/ngo/get/getUser";
+const GET_USER_URL =
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getUser";
 const UPDATE_USER_URL =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/login/updateUser";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/login/updateUser";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
@@ -46,7 +47,10 @@ export default function UpdateUserProfile() {
     if (url.startsWith("http")) return url;
 
     // relative path case
-    return `https://ngo-admin.doaguru.com/${url.replace(/^\//, "")}`;
+    return `https://kidschool.futurekidfoundation.org/${url.replace(
+      /^\//,
+      ""
+    )}`;
   };
 
   useEffect(() => {

@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { logout as logoutAction } from "./../../../Redux/user/userSlice";
 
 const API_UPLOAD =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/post/uploadGalleryImages";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/post/uploadGalleryImages";
 const API_GET =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getGalleryImages";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getGalleryImages";
 const API_DELETE =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/delete/deleteGalleryImage";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/delete/deleteGalleryImage";
 
 const MAX_FILES = 20;
 const MAX_FILE_SIZE = 2 * 1024 * 1024;

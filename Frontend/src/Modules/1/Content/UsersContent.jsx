@@ -8,9 +8,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout as logoutAction } from "./../../../Redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = "https://ngo-admin.doaguru.com/auth/api/ngo/get/getAllUser";
+const API_URL =
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getAllUser";
 const DELETE_URL_BASE =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/login/deleteUser";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/login/deleteUser";
 const CHUNK_SIZE = 5;
 
 const UsersContent = () => {

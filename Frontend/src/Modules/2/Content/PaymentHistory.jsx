@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { logout as logoutAction } from "./../../../Redux/user/userSlice";
 
 const API_URL =
-  "https://ngo-admin.doaguru.com/auth/api/ngo/get/getPaymentTransactions";
+  "https://kidschool.futurekidfoundation.org/auth/api/ngo/get/getPaymentTransactions";
 const CHUNK_SIZE = 5;
 
 const PaymentHistory = () => {
