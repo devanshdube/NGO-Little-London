@@ -51,21 +51,13 @@ router.get(
   authenticateToken,
   getAllSchoolAdmissionQuerys
 );
-router.get(
-  "/getSchoolGalleryImages",
-  authenticateToken,
-  getSchoolGalleryImages
-);
+router.get("/getSchoolGalleryImages", getSchoolGalleryImages);
 router.get(
   "/getSchoolFranchiseQuerys",
   authenticateToken,
   getSchoolFranchiseQuerys
 );
-router.get(
-  "/getSchoolNewsEventsQuerys",
-  authenticateToken,
-  getSchoolNewsEventsQuerys
-);
+router.get("/getSchoolNewsEventsQuerys", getSchoolNewsEventsQuerys);
 router.get("/getSchoolNoticeQuerys", getSchoolNoticeQuerys);
 
 module.exports = router;
