@@ -143,7 +143,7 @@
                       </ul>
                     </li>
                     <li>
-                      <a href="#">Certification</a>
+                      <a href="certificate.html">Certification</a>
                     </li>
                     <li>
                       <a href="project.html">Our Projects</a>
@@ -157,7 +157,7 @@
                   </ul>
                 </div>
                 <div class="main-menu-three__btn-box">
-                  <a href="https://ngo-admin.doaguru.com/" class="main-menu-three__btn">
+                  <a href="https://portal.futurekidfoundation.org/" class="main-menu-three__btn">
                     <span class="icon-right-up"></span>
                     <p class="main-menu-three__btn-text">
                       Open <br />
@@ -221,11 +221,7 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <div class="contact-page__google-map">
-                    <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14671.848688351804!2d79.91490686058643!3d23.171580691915125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3981af90a1cb6393%3A0xd743749dff72b55e!2sLondon%20kids%20Preschool%20Jabalpur%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1762843836300!5m2!1sen!2sin"
-                      class="google-map__one" allowfullscreen loading="lazy"
-                      referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3668.2244400992677!2d79.9584397!3d23.162007199999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3981afe3f1684137%3A0x2944abcdeacd70e6!2sFuture%20kids%20foundation!5e0!3m2!1sen!2sin!4v1763815531020!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                   </div>
                 </div>
                 <div class="col-xl-6 col-lg-6">
@@ -376,7 +372,7 @@
                       <!-- <li><a href="project.html">News & Updates</a></li> -->
                       <li><a href="Volunteers.html">Meet Our Volunteers</a></li>
                       <li><a href="gallery.html">Gallery</a></li>
-                      <li><a href="#">Certification</a></li>
+                      <li><a href="certificate.html">Certification</a></li>
                     </ul>
                     <!-- <ul class="footer-widget-three__links-list footer-widget-three__links-list-two list-unstyled">
                       <li><a href="about.html">Faq</a></li>
@@ -605,7 +601,7 @@
       const data = { name, email, phone, subject, message };
 
       try {
-        const response = await fetch("https://ngo-admin.doaguru.com/auth/api/ngo/post/postData", {
+        const response = await fetch("https://kidschool.futurekidfoundation.org/auth/api/ngo/post/postData", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),

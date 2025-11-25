@@ -494,14 +494,12 @@
   <script src="assets/js/gsap/SplitText.js"></script>
 
 
-
-
   <!-- template js -->
   <script src="assets/js/script.js"></script>
 
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-    fetch("http://localhost:5555/auth/api/website/getAllProjects")
+    fetch("http://kidschool.futurekidfoundation.org/auth/api/website/getAllProjects")
       .then(response => response.json())
       .then(data => {
         console.log(data); // For debugging

@@ -164,7 +164,7 @@
                       </ul>
                     </li>
                     <li>
-                      <a href="#">Certification</a>
+                      <a href="certificate.html">Certification</a>
                     </li>
                     <li>
                       <a href="project.html">Our Projects</a>
@@ -178,7 +178,7 @@
                   </ul>
                 </div>
                 <div class="main-menu-three__btn-box">
-                  <a href="https://ngo-admin.doaguru.com/" class="main-menu-three__btn">
+                  <a href="https://portal.futurekidfoundation.org/" class="main-menu-three__btn">
                     <span class="icon-right-up"></span>
                     <p class="main-menu-three__btn-text">
                       Open <br />
@@ -342,7 +342,7 @@
                   </div>
                   <p class="team-two__sub-title">Treasurer, Future Kids Foundation</p>
                   <h3 class="team-two__title">
-                    <a href="Govind-Prasad.html">Govind Prashad</a>
+                    <a href="Govind-Prasad.html">Govind Prasad Sharma</a>
                   </h3>
                 </div>
               </div>
@@ -563,7 +563,7 @@
                       <!-- <li><a href="project.html">News & Updates</a></li> -->
                       <li><a href="Volunteers.html">Meet Our Volunteers</a></li>
                       <li><a href="gallery.html">Gallery</a></li>
-                      <li><a href="#">Certification</a></li>
+                      <li><a href="certificate.html">Certification</a></li>
                     </ul>
                     <!-- <ul class="footer-widget-three__links-list footer-widget-three__links-list-two list-unstyled">
                       <li><a href="about.html">Faq</a></li>
@@ -786,7 +786,7 @@
   <script>
     async function loadTeamMembers() {
       try {
-        const response = await fetch("https://ngo-admin.doaguru.com/auth/api/website/getAllTeam");
+        const response = await fetch("https://kidschool.futurekidfoundation.org/auth/api/website/getAllTeam");
         const result = await response.json();
 
         if (result.status === "Success" && Array.isArray(result.data)) {
