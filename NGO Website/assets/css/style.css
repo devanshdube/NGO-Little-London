@@ -50,7 +50,7 @@ body {
   font-family: var(--givewell-font);
   color: var(--givewell-gray);
   font-size: 16px;
-  line-height: 26px;
+  line-height: 20px;
   font-weight: 400;
 }
 
@@ -1244,7 +1244,7 @@ ul {
 }
 
 .mobile-nav__content {
-  width: 300px;
+  width: 315px;
   background-color: var(--givewell-black);
   z-index: 10;
   position: relative;
