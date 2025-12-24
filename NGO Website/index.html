@@ -1804,7 +1804,7 @@
                     <h3 class="contact-one__input-title">Membership Type</h3>
                     <div class="contact-one__input-box">
                       <div class="select">
-                          <select name="class_for" id="class_for">
+                          <select name="subject" id="subject">
                             <option value="">Applying for</option>
                             <option value="General Member">General Member</option>
                             <option value="Volunteer">Volunteer</option>
@@ -2110,7 +2110,8 @@
       const name = document.querySelector('input[name="name"]').value.trim();
       const email = document.querySelector('input[name="email"]').value.trim();
       const phone = document.querySelector('input[name="phone"]').value.trim();
-      const subject = document.querySelector('input[name="subject"]').value.trim();
+      //const subject = document.querySelector('input[name="subject"]').value.trim();
+      const subject = document.querySelector('#subject').value.trim();
       const message = document.querySelector('textarea[name="message"]').value.trim();
 
       const data = { name, email, phone, subject, message };
